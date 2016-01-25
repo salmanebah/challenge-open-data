@@ -16,8 +16,9 @@ angular
 	'ngRoute',
 	'ngSanitize',
 	'ngTouch',
+	'nemLogging',
+	'ui-leaflet',
 	'classificationModule'
-	
     ])
     .config(function ($routeProvider) {
 	$routeProvider
