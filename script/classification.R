@@ -1,9 +1,9 @@
 # Prepare data 
-crimes <- read.csv("data/crimes-2012-2002.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
-age <- read.csv("data/pop-region-2011.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
-unemployment <- read.csv("data/chomage-2000T1-20011T4-region-2016.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
-pib <- read.csv("data/pib.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
-diploma <- read.csv("data/diplome.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
+crimes <- read.csv("../data/crimes-2012-2002.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
+age <- read.csv("../data/pop-region-2011.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
+unemployment <- read.csv("../data/chomage-2000T1-20011T4-region-2016.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
+pib <- read.csv("../data/pib.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
+diploma <- read.csv("../data/diplome.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
 
 #delete comma in the age matrix.
 age <- as.matrix(age)

@@ -8,6 +8,7 @@ db.classifications.insert(
         "APB" : 1,
         "population" : 0
     },
+    "year" : 2015,
     "classes": [
         {
             "regions": [
