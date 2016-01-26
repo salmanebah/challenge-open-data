@@ -2,6 +2,7 @@ requirements :
 The classification.R script requires the above R packages : 
 	- jsonlite
 	- hash
+	- fpc
 
 They can be installed in R with this command : 
 	install.packages('<library name>')

@@ -51,14 +51,6 @@
           "name": "Nord-Pas-de-Calais et Picardie"
         },
         {
-          "id": 93,
-          "name": "Provence-Alpes-Côte d'Azur"
-        }
-      ]
-    },
-    {
-      "regions": [
-        {
           "id": 44,
           "name": "Alsace, Champagne-Ardenne et Lorraine"
         },
@@ -73,6 +65,10 @@
         {
           "id": 84,
           "name": "Auvergne et Rhône-Alpes"
+        },
+        {
+          "id": 93,
+          "name": "Provence-Alpes-Côte d'Azur"
         }
       ]
     },
