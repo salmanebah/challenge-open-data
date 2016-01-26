@@ -9,10 +9,10 @@
     "angular-route": "^1.4.0",
     "angular-sanitize": "^1.4.0",
     "angular-touch": "^1.4.0",
-    "Materialize": "materialize#~0.97.5",
     "leaflet": "~0.7.7",
     "angular-simple-logger": "~0.1.5",
-    "ui-leaflet": "~1.0.0"
+    "ui-leaflet": "~1.0.0",
+    "angular-materialize": "~0.1.2"
   },
   "overrides": {
     "bootstrap": {
