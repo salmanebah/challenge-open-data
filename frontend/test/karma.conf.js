@@ -30,10 +30,11 @@ module.exports = function(config) {
       'app/bower_components/angular-route/angular-route.js',
       'app/bower_components/angular-sanitize/angular-sanitize.js',
       'app/bower_components/angular-touch/angular-touch.js',
-      'app/bower_components/Materialize/bin/materialize.js',
       'app/bower_components/leaflet/dist/leaflet-src.js',
       'app/bower_components/angular-simple-logger/dist/angular-simple-logger.js',
       'app/bower_components/ui-leaflet/dist/ui-leaflet.js',
+      'app/bower_components/materialize/bin/materialize.js',
+      'app/bower_components/angular-materialize/src/angular-materialize.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",
