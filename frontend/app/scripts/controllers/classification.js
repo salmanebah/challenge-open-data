@@ -8,6 +8,6 @@
  * Controller of the challengeOpenDataApp
  */
 angular.module('challengeOpenDataApp')
-  .controller('ClassificationCtrl', function ($scope) {
-    $scope.ahas = 'Classification';
+    .controller('ClassificationCtrl', function ($scope, ClassificationService) {
+	$scope.hello = ClassificationService.getHello();
   });

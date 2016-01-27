@@ -8,6 +8,12 @@
  * Service in the challengeOpenDataApp.
  */
 angular.module('challengeOpenDataApp')
-  .service('classification', function () {
+  .service('ClassificationService', function () {
+      
+      var helloService = {};
+      helloService.getHello = function() {
+	  return 'Hello world';
+      };
 
+      return helloService;
   });
