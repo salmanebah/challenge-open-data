@@ -10,3 +10,6 @@ They can be installed in R with this command :
 Example : 
 for jsonlite 
 	install.packages('jsonlite')	
+
+To fix problem occured when installing 'TSclust' package: 
+http://solaimurugan.blogspot.fr/2015/09/3d-data-visualization-using-r-configure.html
