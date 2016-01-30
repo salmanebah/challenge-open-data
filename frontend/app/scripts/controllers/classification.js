@@ -13,9 +13,18 @@ var centerMap = function($scope, leafletData) {
 	leafletData.getGeoJSON().then(function(geojson) {
 	    map.fitBounds(geojson.getBounds());
 	    map.setZoom(6);
+	    L.geoJson($scope.newRegions.data, {
+		style: function(feature) {
+		    switch (parseInt(feature.id) % 2) {
+		    case 0: return {color: "#ff0000"};
+		    default: return {color: "#0000ff"};
+		    }
+		}		
+	    }).addTo(map);
 	});
     });
 };
+
 
 angular.module('challengeOpenDataApp')
     .controller('ClassificationCtrl', function ($scope, ClassificationService, leafletData) {
