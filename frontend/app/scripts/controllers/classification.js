@@ -8,8 +8,17 @@
  * Controller of the challengeOpenDataApp
  */
 
+var centerMap = function($scope, leafletData) {
+    leafletData.getMap().then(function(map) {
+	leafletData.getGeoJSON().then(function(geojson) {
+	    map.fitBounds(geojson.getBounds());
+	    map.setZoom(6);
+	});
+    });
+};
+
 angular.module('challengeOpenDataApp')
-    .controller('ClassificationCtrl', function ($scope, ClassificationService) {
+    .controller('ClassificationCtrl', function ($scope, ClassificationService, leafletData) {
 	
 	// Get the map and bind it to mapInfo
 	ClassificationService.getMap().then(function(mapInfo) {
@@ -17,6 +26,7 @@ angular.module('challengeOpenDataApp')
 	    $scope.newRegions = mapInfo.newRegions;
 	    // Setup the default options
 	    $scope.defaults = mapInfo.defaults;
-	    // Auto discover the center
+	    // Center the map
+	    centerMap($scope, leafletData);
 	});
   });
