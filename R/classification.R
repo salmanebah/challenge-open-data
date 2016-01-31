@@ -2,7 +2,7 @@
 source('util.R')
 
 # Prepares data 
-crimes <- read.csv("../data/crimes-2012-2002.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
+crime <- read.csv("../data/crimes-2012-2002.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
 unemployment <- read.csv("../data/chomage-2000T1-20011T4-region-2016.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
 gdp <- read.csv("../data/pib.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
 diploma <- read.csv("../data/diploma.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
@@ -27,8 +27,9 @@ for(year in as.character(years)) {
 # diploma <- diploma[order(diploma$Code),]
 # 
 # Get code and region names
- regions.code  <- crimes[, 1]
- regions.names <- crimes[, 2]
+ regions <- vector("list")
+ regions$code  <- crime[, 1]
+ regions$names <- crime[, 2]
 # 
 # # Builds a 3d matrix containing all the time series dim(1) corresponds to time 
 # # dim(2) the regions and dim(3) the variables. 
@@ -89,9 +90,51 @@ for(year in as.character(years)) {
 # 
 # 
 # 
+mat <- matrix(nrow = 31, ncol = 5)
+colnames(mat) <- c('crime', 'unemployment', 'age', 'diploma', 'gdp')
+mat.nbCombination <- 31
+for (i in seq(1:mat.nbCombination)) {
+  i.bits <- rawToBits(as.raw(i))
+  mat[i, ] <- as.logical(i.bits[1:5])
+}
 
-res <- ClassifyRegions(regions, crime = crimes, unemployment = unemployment, gbp = gdp, years = seq(1990, 2015), cluster.min = 3, 
-                            cluster.max = 10)
+criteria <- vector("list")
+regions.cluster <- vector("list")
 
-print(res)
-
+for (row in 1:mat.nbCombination) {
+  criteria$crime    <- NULL
+  criteria$age      <- NULL
+  criteria$diploma  <- NULL
+  criteria$gdp      <- NULL
+  criteria$unemployment <- NULL
+  criteria$filename <- "classification"
+  
+    if (mat[row, 'crime']) {
+    criteria$crime    <- crime  
+    criteria$filename <- paste(criteria$filename, "crime", sep = "_")
+  }
+  
+  if (mat[row, 'age']) {
+    criteria$age    <- age  
+    criteria$filename <- paste(criteria$filename, "age", sep = "_")
+  }
+  
+  if (mat[row, 'diploma']) {
+    criteria$diploma  <- diploma
+    criteria$filename <- paste(criteria$filename, "diploma", sep = "_")
+  }
+  
+  if (mat[row, 'gdp']) {
+    criteria$gdp      <- gdp
+    criteria$filename <- paste(criteria$filename, "gdp", sep = "_")
+  }
+  
+  if (mat[row, 'unemployment']) {
+    criteria$unemployment <- unemployment
+    criteria$filename <- paste(criteria$filename, "unemployment", sep = "_")
+  }
+  criteria$filename <- paste(criteria$filename, "json", sep = ".")
+  regions.cluster[[as.character(row)]] <- ClassifyRegions(regions, criteria, years = seq(1990, 2015), 
+                                     cluster.min = 2, cluster.max = 10, 
+                                     filename = criteria$filename)
+}  
