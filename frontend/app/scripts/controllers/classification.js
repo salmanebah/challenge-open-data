@@ -9,40 +9,96 @@
  */
 
 
-var centerMap = function ($scope, leafletData) {
-  leafletData.getMap().then(function (map) {
-    leafletData.getGeoJSON().then(function (geojson) {
-      map.fitBounds(geojson.getBounds());
-      map.setZoom(6);
-      L.geoJson($scope.newRegions.data, {
-        style: function (feature) {
-          switch (parseInt(feature.id) % 2) {
-            case 0:
-              return {color: "#ff0000"};
-            default:
-              return {color: "#0000ff"};
-          }
-        }
-      }).addTo(map);
-    });
-  });
-  
-};
+
 
 
 angular.module('challengeOpenDataApp')
-  .controller('ClassificationCtrl', function ($scope, ClassificationService, leafletData) {
-    // Get the map and bind it to mapInfo
-    ClassificationService.getMap().then(function (mapInfo) {
-      angular.extend($scope, {
-        // Setup the map
-        newRegions: mapInfo.newRegions,
-        // Setup the default options
-        defaults: mapInfo.defaults,
-        maxbounds: mapInfo.maxbounds
-      });
-      // Center the map
-      centerMap($scope, leafletData);
+  .controller('ClassificationCtrl', ['$scope', '$http', 'leafletData', function ($scope, $http) {
+
+    var maxbounds = {
+      northEast: {
+        lat: 50,
+        lng: 7
+      },
+      southWest: {
+        lat: 43,
+        lng: -3
+      }
+    };
+    var france = {
+      lat: 46,
+      lng: -2,
+      zoom: 6
+    };
+
+    angular.extend($scope, {
+      defaults: {
+        scrollWheelZoom: true
+      },
+      maxbounds: maxbounds,
+      france: france
     });
 
-  });
+    $http.get('/maps/regions-2016-simplifie.json')
+      .success(function (data) {
+        angular.extend($scope, {
+          geoson: {
+            data: data,
+            style: {
+              fillColor: 'green',
+              weight: 2,
+              opacity: 1,
+              color: 'white',
+              fillOpacity: 0.7
+            }
+          }
+        });
+      });
+    var clusters = [];
+    var colors = ['#edf8fb', '#b2e2e2', '#66c2a4', '#2ca25f', '#006d2c'];
+    $http.get('/stubs/cluster.json')
+      .success(function (data) {
+        clusters = data.clusters;
+      });
+
+
+    function style(feature) {
+      return {
+        fillColor: getColor(feature),
+        weight: 2,
+        opacity: 1,
+        color: 'black',
+        dashArray: '1',
+        fillOpacity: 0.7
+      };
+    }
+
+    $scope.updateColors = function () {
+      $scope.geoson.style = style;
+    };
+
+    // get the adequate color according to the cluster that contains the region
+    function getColor(feature) {
+      var clusterId = getClusterId(feature.id);
+      if (clusterId >= 0) {
+        return colors[clusterId];
+      }
+      return 'white';
+    }
+
+    // Get the cluster in which the region is
+    function getClusterId(featureId) {
+      for (var i in clusters) {
+        var cluster = clusters[i];
+        if (cluster.hasOwnProperty('regions')) {
+          for (var region in cluster.regions) {
+            if (parseInt(cluster.regions[region].id) === parseInt(featureId)) {
+              return i;
+            }
+          }
+        }
+      }
+      return -1;
+    }
+  }
+  ]);
