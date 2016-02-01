@@ -61,7 +61,6 @@ angular.module('challengeOpenDataApp')
         clusters = data.clusters;
       });
 
-
     function style(feature) {
       return {
         fillColor: getColor(feature),
@@ -100,5 +99,26 @@ angular.module('challengeOpenDataApp')
       }
       return -1;
     }
+
+    function regionClick(region, event) {
+      $scope.regionClicked = region;
+      console.log(event);
+    }
+    $scope.$on("leafletDirectiveGeoJson.myMap.click", function (ev, leafletPayload) {
+      regionClick(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
+    });
+
+    function regionMouseOver(region, event) {
+      var layer = event.target;
+      layer.setStyle({
+        weight: 2
+      });
+      layer.bringToFront();
+      console.log(region);
+    }
+
+    $scope.$on("leafletDirectiveGeoJson.myMap.mouseover", function(ev, leafletPayload) {
+      regionMouseOver(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
+    });
   }
   ]);
