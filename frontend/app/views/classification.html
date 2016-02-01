@@ -1,0 +1,8 @@
+<h1>Visualisation cartographique d'indicateurs socio-économiques</h1>
+<leaflet id="myMap" geojson="geoson" center="france" defaults="defaults" maxbounds="maxbounds" width="100%" height="700px"></leaflet>
+<button ng-click="updateColors()">update the Colors</button>
+<ul>
+  <li> region id : {{regionClicked.id}}</li>
+  <li> region name : {{regionClicked.properties.name}}</li>
+
+</ul>
