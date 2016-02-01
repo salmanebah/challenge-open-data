@@ -9,7 +9,7 @@ db.classifications.insert(
         "population" : 0
     },
     "year" : 2015,
-    "classes": [
+    "clusters": [
         {
             "regions": [
                 {"id" : 11,"name" : "Ile de France"}
