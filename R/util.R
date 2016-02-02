@@ -102,8 +102,8 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
   tmp <- list(criteria = criteria, 'year' = as.numeric(year), 'score' = regions[[year]]$score, classes = c(classes))
   
   # Converts to JSON and writes the result to a file. 
-  regions$jsonResult <- toJSON(tmp, pretty = pretty, auto_unbox = TRUE)
-  return(regions$jsonResult)
+  regions$result.json <- toJSON(tmp, pretty = pretty, auto_unbox = TRUE)
+  return(regions$result.json)
   #write(regions.jsonResult, file = paste(path, filename, sep = ""))
 }
 
@@ -256,38 +256,41 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
 }
 
 # Format a cell value
-GetValue <- function(x, line, colname) {
+GetValue <- function(x, line, colname, hash) {
+  region.id <- as.numeric(rownames(x)[line])
+  region.name <- hash[[as.character(region.id)]]
   
-  return(list('id' = as.numeric(rownames(x)[line]), 
+  return(list('id' = region.id, 
+              'name' = region.name,
               'value' = as.numeric(x[line, colname])))
 }
 
 # Format a values from a column
-GetValues <- function (x, colname) {
+GetValues <- function (x, colname, hash) {
   res <- vector('list')
   values <- c()
   for (line in 1:nrow(x)) {
-    values <- c(values, list(GetValue(x, line,  colname)))
+    values <- c(values, list(GetValue(x, line,  colname, hash)))
   }
   res[[colname]] <- values
   return(res)
 }
 
-GetDataFromAllColumns <- function(x) {
+GetDataFromAllColumns <- function(x, hash) {
   result <- c()
   for (colname in colnames(x)) {
-    result <- c(result, list(GetValues(x, colname)))
+    result <- c(result, list(GetValues(x, colname, hash)))
   }
   return (result)
 } 
 
-FormatDataByYear <- function(x, years) {
+FormatDataByYear <- function(x, years, hash) {
   result <- c()
   for (year in as.character(years)) {
     x.year <- x[year, ,]
     x.use <- x.year[, colSums(is.na(x.year)) != nrow(x.year)]
     result.year <- vector('list')
-    result.year[[year]] <- GetDataFromAllColumns(x.use)
+    result.year[[year]] <- GetDataFromAllColumns(x.use, hash)
     result <- c(result, result.year)
   }
   
