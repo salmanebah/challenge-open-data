@@ -1,4 +1,4 @@
-# Loads utility functions
+# Loads useful functions
 source('util.R')
 
 # Prepares data 
@@ -138,3 +138,6 @@ for (row in 1:mat.nbCombination) {
                                      cluster.min = 2, cluster.max = 10, 
                                      filename = criteria$filename)
 }  
+
+# data.brute <- toJSON(FormatDataByYear(x, seq(1990, 2015)), auto_unbox = TRUE)
+# write(data.brute, file = '../mongoDB-init/years.json')
