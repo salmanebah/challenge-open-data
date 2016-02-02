@@ -30,7 +30,7 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
   #   filename : The JSON filename
   
   # Checks the required libraries are loaded. 
-  for (package in c('jsonlite', 'hash')) {
+  for (package in c('jsonlite', 'hash', 'testit')) {
     if (!require(package, character.only=T, quietly=T)) {
       install.packages(package)
       library(package, character.only=T)
@@ -46,14 +46,21 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
  
   # Gets the ids of the medoids for this classfication
   medoid.ids <- keys(hash(regions[[year]]$groups))
-  print(medoid.ids)
+  assert('Got the medoids ids', !is.null(medoid.ids))
+  
+  #print(medoid.ids)
   for (class in keys(regions$invertedGroups)) {
     regionSection = list()  # Creates the value of the key 'classes'
     medoid.id <- medoid.ids[as.numeric(class)]
-    medoid.name <- regions$hash[[medoid.id]]
-    medoid <- list('id' = as.numeric(medoid.id), 'name' = medoid.name)
+    assert('Not null medoid.id', !is.null(medoid.id))
     
+    medoid.name <- regions$hash[[medoid.id]]
+    assert('Not null medoid.name', !is.null(medoid.name))
+    
+    medoid <- list('id' = as.numeric(medoid.id), 'name' = medoid.name)
     medoid.values <- regions$data[year, medoid.id,]
+    assert('medoid values not null', !is.null(medoid.values))
+    
     print(paste("medoid id", medoid.id))
     print(paste("medoid values", medoid.values))
     print(names(medoid.values))
@@ -74,7 +81,6 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
     } else {
       # Adds monoid criteria values. 
       for (colname in medoid.values.names) {
-        print(paste("colname", colname))
         medoid[[colname]] <- medoid.values[[colname]]
       }      
     }
@@ -106,7 +112,7 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
                             cluster.max = 10, filename = "classification.json",
                             path = "../mongoDB-init/") {
   # Checks the required libraries are loaded. 
-  for (package in c('fpc', 'TSclust')) {
+  for (package in c('fpc', 'testit')) {
     if (!require(package, character.only=T, quietly=T)) {
       install.packages(package)
       library(package, character.only=T)
@@ -207,7 +213,7 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
   
   result.json <- ''
   for (year in as.character(year.valid)) {
-    print(year)
+    print(paste('year' , year))
     pamk.best <- pamk(regions$data[year, ,], krange = cluster.min:cluster.max)
     pamk.scaled.best <- pamk(regions$data[year, ,], krange = cluster.min:cluster.max, 
                              scaling = TRUE)
@@ -218,9 +224,9 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
       regions[[year]]$nbclust <- pamk.best$nc
       regions[[year]]$pam <- pamk.best$pamobject
     } 
-    print(pamk.best$pamobject$silinfo$avg.width)
-    print(pamk.scaled.best$pamobject$silinfo$avg.width)
-    print(regions[[year]]$nbclust)
+#     print(pamk.best$pamobject$silinfo$avg.width)
+#     print(pamk.scaled.best$pamobject$silinfo$avg.width)
+#     print(regions[[year]]$nbclust)
     # Clusters
     
     regions[[year]]$groups <- regions[[year]]$pam$clustering
@@ -228,7 +234,10 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
     #rect.hclust(regions$pdclust, k=regions$nbclust, border="red") 
     # Summarizes clusters 
     regions[[year]]$id.medoids <- regions[[year]]$pam$id.med
+    assert("There is at least one medoid", !is.null(regions[[year]]$id.medoids))
+    
     regions[[year]]$score <- regions[[year]]$pam$silinfo$avg.width
+    assert("The is a score for the current clustering", !is.null(regions[[year]]$score))
     
     # Writes the result in JSON
     tmp <- ClassificationToJSON(regions,
@@ -245,4 +254,43 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
   regions$result.json <- result.json
   write(regions$result.json, file = paste(path, filename, sep = ""))
   return(regions)
+}
+
+# Format a cell value
+GetValue <- function(x, line, colname) {
+  
+  return(list('id' = as.numeric(rownames(x)[line]), 
+              'value' = as.numeric(x[line, colname])))
+}
+
+# Format a values from a column
+GetValues <- function (x, colname) {
+  res <- vector('list')
+  values <- c()
+  for (line in 1:nrow(x)) {
+    values <- c(values, list(GetValue(x, line,  colname)))
+  }
+  res[[colname]] <- values
+  return(res)
+}
+
+GetDataFromAllColumns <- function(x) {
+  result <- c()
+  for (colname in colnames(x)) {
+    result <- c(result, list(GetValues(x, colname)))
+  }
+  return (result)
+} 
+
+FormatDataByYear <- function(x, years) {
+  result <- c()
+  for (year in as.character(years)) {
+    x.year <- x[year, ,]
+    x.use <- x.year[, colSums(is.na(x.year)) != nrow(x.year)]
+    result.year <- vector('list')
+    result.year[[year]] <- GetDataFromAllColumns(x.use)
+    result <- c(result, result.year)
+  }
+  
+  return (list('years' = result))
 }
