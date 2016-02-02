@@ -5,7 +5,7 @@
 # Home page
 GET     /                           controllers.Application.index()
 
-GET     /classification/:year     controllers.Application.classes(year:Integer)
+POST     /api/classification/:year     controllers.Application.clusters(year:Integer)
 
 
 # Map static resources from the /public folder to the /assets URL path
