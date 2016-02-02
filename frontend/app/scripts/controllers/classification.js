@@ -30,65 +30,96 @@ angular.module('challengeOpenDataApp')
       lng: -2,
       zoom: 6
     };
-
-    angular.extend($scope, {
-      defaults: {
-        scrollWheelZoom: true
-      },
-      maxbounds: maxbounds,
-      france: france
-    });
-
-    $http.get('/maps/regions-2016-simplifie.json')
-      .success(function (data) {
-        angular.extend($scope, {
-          geoson: {
-            data: data,
-            style: {
-              fillColor: 'green',
-              weight: 2,
-              opacity: 1,
-              color: 'white',
-              fillOpacity: 0.7
-            }
-          }
-        });
-      });
+    var criteria = {
+      'crime': 0,
+      'education': 0,
+      'employment': 0,
+      'gdp': 0,
+      'population': 0
+    };
     var clusters = [];
-    var colors = ['#edf8fb', '#b2e2e2', '#66c2a4', '#2ca25f', '#006d2c'];
-    $http.get('/stubs/cluster.json')
-      .success(function (data) {
-        clusters = data.clusters;
+    var colors = ['black', 'yellow', 'green', 'brown', 'red', 'pink'];
+
+    function init() {
+      angular.extend($scope, {
+        defaults: {
+          scrollWheelZoom: true,
+          tileLayer: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png"
+        },
+        maxbounds: maxbounds,
+        france: france,
+        criteria: criteria,
+        clusters: clusters,
+        colors: colors,
+        geojson: {
+          data: [],
+          style: function (feature) {
+            return $scope.getStyle(feature);
+          }
+        }
       });
 
-    function style(feature) {
+      $scope.layer = L.geoJson();
+      $http.get('/maps/regions-2016-simplifie.json')
+        .success(function (data) {
+          $scope.geojson.data = data;
+        });
+
+    }
+
+    init();
+    $scope.getStyle = function (feature) {
       return {
-        fillColor: getColor(feature),
-        weight: 2,
+        fillColor: $scope.getColor(feature),
+        weight: 1,
         opacity: 1,
         color: 'black',
-        dashArray: '1',
-        fillOpacity: 0.7
+        fillOpacity: 0.8
       };
-    }
-
-    $scope.updateColors = function () {
-      $scope.geoson.style = style;
     };
 
-    // get the adequate color according to the cluster that contains the region
-    function getColor(feature) {
-      var clusterId = getClusterId(feature.id);
+    var count = 0;
+    $scope.updateColors = function () {
+      var empty = {
+        'crime': 0,
+        'education': 0,
+        'employment': 0,
+        'gdp': 0,
+        'population': 0
+      };
+      if ((count % 2 ) === 0) {
+        console.log('red');
+        $scope.geojson.style = {fillColor: 'red'}
+      } else if ((count % 2) === 1) {
+        $scope.geojson.style = {fillColor: 'blue'};
+        console.log('blue');
+      }
+      count++;
+
+      if (JSON.stringify(empty) !== JSON.stringify($scope.criteria)) {
+        $http.post('/api/classification/2006', $scope.criteria)
+          .success(function (data) {
+            $scope.clusters = data.clusters;
+            $scope.geojson.style = function (feature) {
+              return $scope.getStyle(feature);
+            };
+          });
+      }
+    };
+
+// get the adequate color according to the cluster that contains the region
+    $scope.getColor = function (feature) {
+      var clusterId = $scope.getClusterId(feature.id);
       if (clusterId >= 0) {
-        return colors[clusterId];
+        return $scope.colors[clusterId];
       }
       return 'white';
-    }
+    };
 
-    // Get the cluster in which the region is
-    function getClusterId(featureId) {
-      for (var i in clusters) {
-        var cluster = clusters[i];
+// Get the cluster in which the region is
+    $scope.getClusterId = function (featureId) {
+      for (var i in $scope.clusters) {
+        var cluster = $scope.clusters[i];
         if (cluster.hasOwnProperty('regions')) {
           for (var region in cluster.regions) {
             if (parseInt(cluster.regions[region].id) === parseInt(featureId)) {
@@ -98,27 +129,19 @@ angular.module('challengeOpenDataApp')
         }
       }
       return -1;
-    }
+    };
+    /*
+     function mouseOverHandler(event) {
+     console.log(event.type);
+     }
 
-    function regionClick(region, event) {
-      $scope.regionClicked = region;
-      console.log(event);
-    }
-    $scope.$on("leafletDirectiveGeoJson.myMap.click", function (ev, leafletPayload) {
-      regionClick(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
-    });
+     function mouseOutHandler(event) {
+     console.log(event.type);
 
-    function regionMouseOver(region, event) {
-      var layer = event.target;
-      layer.setStyle({
-        weight: 2
-      });
-      layer.bringToFront();
-      console.log(region);
-    }
+     }
 
-    $scope.$on("leafletDirectiveGeoJson.myMap.mouseover", function(ev, leafletPayload) {
-      regionMouseOver(leafletPayload.leafletObject.feature, leafletPayload.leafletEvent);
-    });
-  }
-  ]);
+     function clickHandler(event) {
+     console.log(event.type);
+     }*/
+  }]);
+

@@ -1,8 +1,35 @@
 <h1>Visualisation cartographique d'indicateurs socio-économiques</h1>
-<leaflet id="myMap" geojson="geoson" center="france" defaults="defaults" maxbounds="maxbounds" width="100%" height="700px"></leaflet>
+<form action="#">
+  <p>
+    <input ng-model="criteria.crime" type="checkbox" id="crime"
+           ng-true-value="1" ng-false-value="0"/>
+    <label for="crime">Crime</label>
+
+    <input ng-model="criteria.education" type="checkbox" id="education"
+           ng-true-value="1" ng-false-value="0"/>
+    <label for="education">Éducation</label>
+
+    <input ng-model="criteria.employment" type="checkbox" id="employment"
+           ng-true-value="1" ng-false-value="0"/>
+    <label for="employment">Emploi</label>
+
+    <input ng-model="criteria.gdp" type="checkbox" id="gdp"
+           ng-true-value="1" ng-false-value="0"/>
+    <label for="gdp">PIB</label>
+
+    <input ng-model="criteria.population" type="checkbox" id="population"
+           ng-true-value="1" ng-false-value="0"/>
+    <label for="population">Population</label>
+
+  </p>
+</form>
 <button ng-click="updateColors()">update the Colors</button>
+
+Criteria : {{criteria}}
+
+<leaflet id="myMap"  geojson="geojson" center="france" defaults="defaults" maxbounds="maxbounds" width="100%"
+         height="700px"></leaflet>
 <ul>
   <li> region id : {{regionClicked.id}}</li>
   <li> region name : {{regionClicked.properties.name}}</li>
-
 </ul>
