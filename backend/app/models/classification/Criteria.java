@@ -8,20 +8,20 @@ public class Criteria {
     @JsonProperty
     int crime;
     @JsonProperty
+    int population;
+    @JsonProperty
     int education;
     @JsonProperty
+    int gdp;
+    @JsonProperty
     int employment;
-    @JsonProperty
-    int APB;
-    @JsonProperty
-    int population;
 
-    public Criteria(int crime, int education, int employment, int APB, int population) {
+    public Criteria(int crime, int population, int education, int gdp, int employment) {
         this.crime = crime;
-        this.education = education;
-        this.employment = employment;
-        this.APB = APB;
         this.population = population;
+        this.education = education;
+        this.gdp = gdp;
+        this.employment = employment;
     }
 
     public Criteria() {
