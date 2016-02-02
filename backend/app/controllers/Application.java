@@ -8,12 +8,15 @@ import play.mvc.*;
 
 import views.html.*;
 
+import java.util.Map;
+
 public class Application extends Controller {
 
-    public Result classes(Integer year) {
-        Criteria criteria = new Criteria(0, 0, 1, 1, 0);
+    public Result clusters(Integer year) {
+        Criteria criteria = Json.fromJson(request().body().asJson(), Criteria.class);
         Classification classification = ClassificationDAO.findByCriteriaAndYear(criteria,year);
         if(classification == null) return notFound();
+        response().setContentType("application/json");
         return ok(Json.toJson(classification));
     }
 
