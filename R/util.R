@@ -19,7 +19,7 @@ inc <- function(x)
 
 
 ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.diploma = TRUE, 
-                                 use.gdp = TRUE, use.unemployment = TRUE, 
+                                 use.gdp = TRUE, use.unemployment = TRUE, pretty = FALSE,
                                  path = "../mongoDB-init/", filename = "classification", year) {
   # Writes the result of the classification in JSON
   # Args:
@@ -102,7 +102,7 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
   tmp <- list(criteria = criteria, 'year' = as.numeric(year), 'score' = regions[[year]]$score, classes = c(classes))
   
   # Converts to JSON and writes the result to a file. 
-  regions$jsonResult <- toJSON(tmp, pretty = TRUE, auto_unbox = TRUE)
+  regions$jsonResult <- toJSON(tmp, pretty = pretty, auto_unbox = TRUE)
   return(regions$jsonResult)
   #write(regions.jsonResult, file = paste(path, filename, sep = ""))
 }
@@ -130,25 +130,25 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
   #Sorts regions according to their code
   if (!is.null(criteria$crime)) {
     variableNames <- c("crime")
-    crime <- criteria$crime[order(criteria$crime$Code),]
+    crime <- criteria$crime
     inc(criteria$nbCriteria)
   }
   
   if (!is.null(criteria$unemployment)) {
     variableNames <- c(variableNames, "unemployment")
-    unemployment <- criteria$unemployment[order(criteria$unemployment$Code),]
+    unemployment <- criteria$unemployment
     inc(criteria$nbCriteria)
   }
   
   if (!is.null(criteria$gdp)) {
     variableNames <- c(variableNames, "GDP")
-    gdp <- criteria$gdp[order(criteria$gdp$Code),]
+    gdp <- criteria$gdp
     inc(criteria$nbCriteria)
   }
   
   if (!is.null(criteria$diploma)) {
     variableNames <- c(variableNames, "diploma")
-    diploma <- criteria$diploma[order(criteria$diploma$Code),]
+    diploma <- criteria$diploma
     inc(criteria$nbCriteria)
   }
   
@@ -161,7 +161,6 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
 
   # Builds a 3d matrix containing all the time series dim(1) corresponds to time 
   # dim(2) the regions and dim(3) the variables. 
-
   regions$data <- array(dim = c(length(years), length(regions$names), length(variableNames)),
                         dimnames = list(years, regions$code, variableNames))
 
