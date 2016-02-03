@@ -12,6 +12,11 @@
   "unused": true,
   "globals": {
       "angular": false,
-      "L": false
+      "L": false,
+      "d3": false,
+      "x": false,
+      "y": false,
+      "c": false,
+      "r": false
   }
 }
