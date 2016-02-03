@@ -95,7 +95,7 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
   
   classes <- list.regions 
   criteria = list('crime' = as.numeric(use.crime), 'population' = as.numeric(use.age),
-                  'education' = as.numeric(use.diploma), 'APB' = as.numeric(use.gdp),
+                  'education' = as.numeric(use.diploma), 'gdp' = as.numeric(use.gdp),
                   'employment' = as.numeric(use.unemployment))
   
   #tmp <- list(year=2009, criteria=criteria)
@@ -277,22 +277,42 @@ GetValues <- function (x, colname, hash) {
 }
 
 GetDataFromAllColumns <- function(x, hash) {
-  result <- c()
+  result <- vector('list')
   for (colname in colnames(x)) {
-    result <- c(result, list(GetValues(x, colname, hash)))
+    result <- c(result, GetValues(x, colname, hash))
   }
   return (result)
 } 
 
 FormatDataByYear <- function(x, years, hash) {
   result <- c()
+  criteria <- vector('list') # Contains a list of the critera
   for (year in as.character(years)) {
-    x.year <- x[year, ,]
-    x.use <- x.year[, colSums(is.na(x.year)) != nrow(x.year)]
+    x.year    <- x[year, ,]
+    x.use     <- x.year[, colSums(is.na(x.year)) != nrow(x.year)]
+    x.not.use <- x.year[, colSums(is.na(x.year)) > 0]
+    
+    # Build the criteria list with the criteria name as key and a boolean as value
+    criteria <- ColNameToList(x.use)
+    criteria <- c(criteria, ColNameToList(x.not.use, FALSE))
+    
+    # Get all data for this year
     result.year <- vector('list')
-    result.year[[year]] <- GetDataFromAllColumns(x.use, hash)
+    result.year[[year]] <- c(list('criteria' = criteria), 
+                             GetDataFromAllColumns(x.use, hash))
     result <- c(result, result.year)
   }
   
   return (list('years' = result))
 }
+
+
+ColNameToList <- function(x, value = TRUE) {
+  
+  # Create a list with colname of x as keys and the given value as value
+  result <- vector('list')
+  for(colname in colnames(x)) {
+    result[[colname]] <- value
+  }
+  return (result)
+} 
