@@ -7,9 +7,11 @@
  * # correlation
  * Service in the challengeOpenDataApp.
  */
+
+
 angular.module('challengeOpenDataApp')
     .service('CorrelationService', function (CorrelationData) {
-	var yearsData = CorrelationData.years;
+	var yearsData = CorrelationData.data.years;
 	console.log(yearsData);
       	var d3Service = {};
 
@@ -26,11 +28,50 @@ angular.module('challengeOpenDataApp')
 	var yAxis;
 	var circles;
 
-	var getDataByCriteria = function(year, criteria) {
+	var buildData = function(ctx) {
+	    var xCriterionCtx = ctx.xCriterion;
+	    var yCriterionCtx = ctx.yCriterion;
+	    var sizeCriterionCtx = ctx.sizeCriterion;
+	    var data = [];
+	    // all ctx have the same size with the same region in the same order
+	    for (var i = 0; i < xCriterionCtx.value.length; i++) {
+		var currentData = {
+		    xCriterion : { name: xCriterionCtx.name, value: xCriterionCtx.value[i].value},
+		    yCriterion : { name: yCriterionCtx.name, value: yCriterionCtx.value[i].value},
+		    sizeCriterion : { name: sizeCriterionCtx.name, value: sizeCriterionCtx.value[i].value},
+		    region: { id: xCriterionCtx.value[i].id, name: xCriterionCtx.value[i].name}
+		};
+		data.push(currentData);
+	    }
+
+	    return data;
+	};
+
+	d3Service.getDataByCriteria = function(year, firstCriteria,
+					 secondCriteria,
+					 thirdCriteria) {
 	    //TODO: validate input.
+	    if (parseInt(year) < 1990 || parseInt(year) > 2015) {
+		console.log("Year data not available");
+		return -1;
+	    }
 	    var yearInfo = yearsData[year];
-	    console.log(yearInfo);
-	    
+	    if ((yearInfo.criteria[firstCriteria] === false) ||
+		(yearInfo.criteria[secondCriteria] === false) ||
+		(yearInfo.criteria[thirdCriteria] === false)) {
+		console.log("Not all criterion is available for the year: " + year);
+		console.log(yearInfo);
+		return -1;
+	    }
+	    var firstCriteriaInfo = yearInfo[firstCriteria];
+	    var secondCriteriaInfo = yearInfo[secondCriteria];
+	    var thirdCriteriaInfo = yearInfo[thirdCriteria];
+	    // Build the context
+	    var context = { xCriterion : {name: firstCriteria, value: firstCriteriaInfo},
+			    yCriterion: {name: secondCriteria, value: secondCriteriaInfo},
+			    sizeCriterion: {name: thirdCriteria, value: thirdCriteriaInfo}
+			  };
+	    return buildData(context);
 	};
 
 	var initSvg = function() {
@@ -125,7 +166,8 @@ angular.module('challengeOpenDataApp')
 		.transition()
 		.attr("r", function(d)  { return rScale(d.sizeCriterion.value);})	  
 	        //TODO: update the color according to the region
-		.style("fill", "blue");  
+		.style("fill", "blue")
+	        .style("opacity", 0.5);
 	};
 
 	// Called once to setup the context
