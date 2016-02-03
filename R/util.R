@@ -141,7 +141,7 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
   }
   
   if (!is.null(criteria$gdp)) {
-    variableNames <- c(variableNames, "GDP")
+    variableNames <- c(variableNames, "gdp")
     gdp <- criteria$gdp
     inc(criteria$nbCriteria)
   }
@@ -188,7 +188,7 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
     }
     
     if (!is.null(gdp[[year]])) {
-      regions$data[year, , 'GDP'] <- gdp[[year]]
+      regions$data[year, , 'gdp'] <- gdp[[year]]
       inc(nbValidCriteria)
     }
     
@@ -333,7 +333,7 @@ GetAllValidYears <- function(x, mat) {
     
     if (mat.three.criteria[row, 'gdp']) {
       criteria.selected[['gdp']] <- TRUE
-      criteria.selected.colnames <- c(criteria.selected.colnames, 'GDP')
+      criteria.selected.colnames <- c(criteria.selected.colnames, 'gdp')
       
     }
     
