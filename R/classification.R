@@ -147,8 +147,7 @@ for (row in 1:mat.nbCombination) {
 
 # Write raw data year by year in JSON format
 library(hash)
-data.all.criteria.data <- regions.cluster$`31`$data
 regions.names.hash <- hash(keys=regions$code, values=regions$names)
-
+data.all.criteria <- regions.cluster$`31`$data
 data.brute <- toJSON(FormatDataByYear(data.all.criteria, hash = regions.names.hash, seq(1990, 2015)), auto_unbox = TRUE)
 write(data.brute, file = '../mongoDB-init/years.json')
