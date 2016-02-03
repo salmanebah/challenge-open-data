@@ -1,4 +1,4 @@
-# Loads utility functions
+# Loads useful functions
 source('util.R')
 
 # Prepares data 
@@ -19,6 +19,12 @@ for(year in as.character(years)) {
   age[[year]] <- tmp
   age[[year]] <- RemoveComma(age[[year]])
 }
+
+# Order variables by region codes
+crime <- crime[order(crime$Code), ]
+diploma <- diploma[order(diploma$Code), ]
+unemployment <- unemployment[order(unemployment$Code), ]
+gdp <- gdp[order(gdp$Code), ]
 
 # #Sorts regions according to their code
 # crimes <- crimes[order(crimes$Code),]
@@ -107,7 +113,7 @@ for (row in 1:mat.nbCombination) {
   criteria$diploma  <- NULL
   criteria$gdp      <- NULL
   criteria$unemployment <- NULL
-  criteria$filename <- "classification"
+  criteria$filename <- "classification-new-region"
   
     if (mat[row, 'crime']) {
     criteria$crime    <- crime  
@@ -138,3 +144,11 @@ for (row in 1:mat.nbCombination) {
                                      cluster.min = 2, cluster.max = 10, 
                                      filename = criteria$filename)
 }  
+
+# Write raw data year by year in JSON format
+library(hash)
+data.all.criteria.data <- regions.cluster$`31`$data
+regions.names.hash <- hash(keys=regions$code, values=regions$names)
+
+data.brute <- toJSON(FormatDataByYear(data.all.criteria, hash = regions.names.hash, seq(1990, 2015)), auto_unbox = TRUE)
+write(data.brute, file = '../mongoDB-init/years.json')
