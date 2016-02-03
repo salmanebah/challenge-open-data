@@ -27,7 +27,26 @@ angular.module('challengeOpenDataApp')
 	var xAxis;
 	var yAxis;
 	var circles;
-
+	
+	var colorArray = ["#1f77b4", "#e7ba52", "#2ca02c", "#8c564b",
+			  "#bcbd22", "#8c6d31", "#990099", "#993333",
+			  "#99cc00", "#cc3300", "#0099ff", "#ff9900",
+			 "#00ff99"];
+	var colorMap = { 11 : colorArray[0],
+			 24 : colorArray[1],
+			 26: colorArray[2], 43: colorArray[2],
+			 23: colorArray[3], 25: colorArray[3],
+			 31: colorArray[4], 22: colorArray[4],
+			 41: colorArray[5], 42: colorArray[5], 21: colorArray[5],
+			 52: colorArray[6],
+			 53: colorArray[7],
+			 72: colorArray[8], 54: colorArray[8], 74: colorArray[8],
+			 73: colorArray[9], 91: colorArray[9],
+			 82: colorArray[10], 83: colorArray[10],
+			 93: colorArray[11],
+			 94: colorArray[12]
+		       };
+			 
 	var buildData = function(ctx) {
 	    var xCriterionCtx = ctx.xCriterion;
 	    var yCriterionCtx = ctx.yCriterion;
@@ -94,7 +113,7 @@ angular.module('challengeOpenDataApp')
 	    
 	    rScale = d3.scale.linear()
 		    .domain([0, d3.max(data, function(d) { return d.sizeCriterion.value; })])
-		    .range([4, 15]);
+		    .range([6, 25]);
 	};
 
 	var updateXaxis = function(data) {
@@ -145,17 +164,19 @@ angular.module('challengeOpenDataApp')
 	var drawRegions = function(data) {
 	    var duration = 1500;
 	    var delay = 7;
+	    var opacity = 1;
+	    var delayStep = 7;
 	    //load the data
 	    circles = chart.selectAll("circle")
 		    .data(data, function(d) { return d.region.id; });
 	    circles
 		.transition()
 		.duration(duration)
-		.delay(function(d, i) {delay = i * 7; return delay;}) 
+		.delay(function(d, i) {delay = i * delayStep; return delay;}) 
 		.attr("cx", function(d) { return xScale(d.xCriterion.value); })
 		.attr("cy", function(d) { return yScale(d.yCriterion.value); })
 		.attr('r', function(d) { return rScale(d.sizeCriterion.value); })
-		.style('opacity', 0.5); // force to 1, so they don't get stuck below 1 at enter()
+		.style('opacity', opacity); // force to 1, so they don't get stuck below 1 at enter()
 
 	    circles
 		.enter()
@@ -166,8 +187,8 @@ angular.module('challengeOpenDataApp')
 		.transition()
 		.attr("r", function(d)  { return rScale(d.sizeCriterion.value);})	  
 	        //TODO: update the color according to the region
-		.style("fill", "blue")
-	        .style("opacity", 0.5);
+		.style("fill", function(d) { var id = d.region.id; return colorMap[id];})
+	        .style("opacity", opacity);
 	};
 
 	// Called once to setup the context
