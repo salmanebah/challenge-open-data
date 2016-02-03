@@ -15,7 +15,7 @@ angular.module('challengeOpenDataApp')
 	console.log(yearsData);
       	var d3Service = {};
 
-	var margin = {top : 20, right: 20, bottom: 30, left: 40};
+	var margin = {top : 60, right: 60, bottom: 60, left: 60};
 	var width = 1000 - margin.left - margin.right;
 	var height = 600 - margin.top - margin.bottom;
 	var padding = 30;
@@ -104,16 +104,18 @@ angular.module('challengeOpenDataApp')
 
 	var updateScale = function(data) {
 	    xScale = d3.scale.linear()
-		    .domain([0, d3.max(data, function(d) { return d.xCriterion.value; })])
+		.domain([d3.min(data, function(d) { return d.xCriterion.value;}),
+			 d3.max(data, function(d) { return d.xCriterion.value; })])
 		    .range([padding,  width - padding * 2]);
 	    
 	    yScale = d3.scale.linear()
-	  	    .domain([0, d3.max(data, function(d) { return d.yCriterion.value; })])
+	  	.domain([d3.min(data, function(d) { return d.yCriterion.value;}),
+			 d3.max(data, function(d) { return d.yCriterion.value; })])
 		    .range([height - padding,  padding]);
 	    
 	    rScale = d3.scale.linear()
 		    .domain([0, d3.max(data, function(d) { return d.sizeCriterion.value; })])
-		    .range([6, 25]);
+		    .range([10, 30]);
 	};
 
 	var updateXaxis = function(data) {
