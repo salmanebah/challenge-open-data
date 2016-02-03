@@ -294,7 +294,7 @@ FormatDataByYear <- function(x, years, hash) {
     
     # Build the criteria list with the criteria name as key and a boolean as value
     criteria <- ColNameToList(x.use)
-    criteria <- c(criteria, ColNameToList(x.not.use, FALSE))
+    criteria <- c(criteria, ColNameToList(x.not.use, value = FALSE))
     
     # Get all data for this year
     result.year <- vector('list')
@@ -315,4 +315,52 @@ ColNameToList <- function(x, value = TRUE) {
     result[[colname]] <- value
   }
   return (result)
+} 
+
+GetAllValidYears <- function(x, mat) {
+  result <- c()
+  mat.three.criteria <- mat[rowSums(mat) == 3, ]
+  
+  for (row in 1:nrow(mat.three.criteria)) {
+    criteria.selected.colnames <- c()
+    criteria.selected <- list('crime' = FALSE, 'unemployment' = FALSE, 'gdp' = FALSE, 
+                              'age' = FALSE, 'diploma' = FALSE)
+    
+    if (mat.three.criteria[row, 'crime']) {
+      criteria.selected[['crime']] <- TRUE
+      criteria.selected.colnames <- c(criteria.selected.colnames, 'crime')
+    }
+    
+    if (mat.three.criteria[row, 'gdp']) {
+      criteria.selected[['gdp']] <- TRUE
+      criteria.selected.colnames <- c(criteria.selected.colnames, 'GDP')
+      
+    }
+    
+    if (mat.three.criteria[row, 'unemployment']) {
+      criteria.selected[['unemployment']] <- TRUE
+      criteria.selected.colnames <- c(criteria.selected.colnames, 'unemployment')
+    }
+    
+    
+    if (mat.three.criteria[row, 'age']) {
+      criteria.selected[['age']] <- TRUE
+      criteria.selected.colnames <- c(criteria.selected.colnames, '0 à 19 ans')
+    }
+    
+    if (mat.three.criteria[row, 'diploma']) {
+      criteria.selected[['diploma']] <- TRUE
+      criteria.selected.colnames <- c(criteria.selected.colnames, 'diploma')
+    }
+    x.use <- x[, '11', criteria.selected.colnames]
+    result <- c(result, list(GetValidYears(x.use, criteria.selected)))
+    
+  }
+  return(result)
+}
+
+GetValidYears <- function(x.use, criteria.selected) {
+  row.no.na <- rownames(x.use[rowSums(is.na(x.use)) == 0, ])
+  valid.years <- c(as.numeric(row.no.na))
+  return (c(criteria.selected, list(years = valid.years)))
 } 
