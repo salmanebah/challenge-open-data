@@ -2,10 +2,10 @@ RemoveComma <- function(x, from = 3) {
   # Removes comma from a character numeric matrix and return the corresponding numeric 
   # values as vector 
   # Args:
-  #   x   : The 2d matrix containing characters number containing commas
-  #   from: The number of column to start 
+  #   x   : A two dimension matrix containing characters number with commas
+  #   from: The index of column to start 
   # Returns:
-  #   The numeric vector corresponding to the values contained in the x matrix    
+  #   A numeric vector corresponding to the values contained in the x matrix    
   for (i in from:ncol(x)) {
     x[, i] <- as.numeric(gsub(",", "", x[, i]))
   }
@@ -13,6 +13,11 @@ RemoveComma <- function(x, from = 3) {
 }
 
 inc <- function(x)
+  # Increments a number
+  # Args:
+  #   x : The number to increment
+  # Returns:
+  #   x + 1
 {
   eval.parent(substitute(x <- x + 1))
 }
@@ -24,11 +29,13 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
                                  region.new = 1) {
   # Writes the result of the classification in JSON
   # Args:
-  #   regions  : A vector containing the region ids, its names, the result of the clustering
-  #              process
-  #   use.x    : TRUE means the x variable was used for the clustering. 
-  #   path     : The directory where the file will be stored. 
-  #   filename : The JSON filename
+  #   regions     : A vector containing the region ids, its names, the result of the clustering
+  #   use.x       : TRUE means the x variable was used for the clustering. 
+  #   path        : The directory where the file will be stored. 
+  #   filename    : The JSON filename
+  #   region.new  : 1 if the clustering is made in the 2016 regions
+  # Returns: 
+  #   The clustering result in JSON.
   
   # Checks the required libraries are loaded. 
   for (package in c('jsonlite', 'hash', 'testit')) {
@@ -38,35 +45,36 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
     }
   }
  
-  regions$hash <- hash(keys=regions$code, values=regions$names)
+  regions$hash <- hash(keys=regions$code, values=regions$names)  # Hashes the region codes with its names
   regions$invertedGroups <- invert(hash(regions[[year]]$groups)) # inverts the hash map
   
   # Builds the JSON schema
-  classes <- c()
+  clusters <- c()
   list.regions <- list()
  
-  # Gets the ids of the medoids for this classfication
+  # Gets the ids of the medoids from the computed clustering
   medoid.ids <- keys(hash(regions[[year]]$groups))
   assert('Got the medoids ids', !is.null(medoid.ids))
   
-  #print(medoid.ids)
-  for (class in keys(regions$invertedGroups)) {
-    regionSection = list()  # Creates the value of the key 'classes'
-    medoid.id <- medoid.ids[as.numeric(class)]
+  # Creates the 'clustering' JSON object
+  # For each cluster add its medoid and an array of region ids and names
+  # belonging to this cluster. 
+  for (cluster.id in keys(regions$invertedGroups)) {
+    cluster.id.regions = list()  
+    medoid.id <- medoid.ids[as.numeric(cluster.id)] # Gets the medoid for this cluster
     assert('Not null medoid.id', !is.null(medoid.id))
     
-    medoid.name <- regions$hash[[medoid.id]]
+    medoid.name <- regions$hash[[medoid.id]] # Gets the medoid's name 
     assert('Not null medoid.name', !is.null(medoid.name))
     
-    medoid <- list('id' = as.numeric(medoid.id), 'name' = medoid.name)
+    # Creates the 'medoid' JSON object
+    medoid <- list('id' = as.numeric(medoid.id), 'name' = medoid.name) 
     medoid.values <- regions$data[year, medoid.id,]
     assert('medoid values not null', !is.null(medoid.values))
-    
-    print(paste("medoid id", medoid.id))
-    print(paste("medoid values", medoid.values))
-    print(names(medoid.values))
     medoid.values.names <- names(medoid.values)
-    if (is.null(medoid.values.names)) {   # Case only one criterion is selected,
+    
+    # Case only one criterion is selected, looks for the selected criterion
+    if (is.null(medoid.values.names)) {   
       if (use.crime) {
         colname <- "crime"
       } else if (use.age) {
@@ -78,7 +86,7 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
       } else {
         colname <- "unemployment"
       }
-      medoid[[colname]] <- medoid.values
+      medoid[[colname]] <- medoid.values # Gets the medoid values of this criterion
     } else {
       # Adds monoid criteria values. 
       for (colname in medoid.values.names) {
@@ -86,26 +94,26 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
       }      
     }
     
-    # Aggregates the region ids and their names to a array for each group
-    for (codeRegion in regions$invertedGroups[[class]]) {
-      regionSection[[length(regionSection) + 1]] <- list('id' = as.numeric(codeRegion),
+    # Aggregates the region ids and their names in a array for each cluster
+    for (codeRegion in regions$invertedGroups[[cluster.id]]) {
+      cluster.id.regions[[length(cluster.id.regions) + 1]] <- list('id' = as.numeric(codeRegion),
                                                         'name' = regions$hash[[codeRegion]])
     }
-    list.regions[[length(list.regions) + 1]] <- list('medoid' = medoid, 'regions' = c(regionSection))
+    list.regions[[length(list.regions) + 1]] <- list('medoid' = medoid, 'regions' = c(cluster.id.regions))
   }
   
-  classes <- list.regions 
-  criteria = list('crime' = as.numeric(use.crime), 'age' = as.numeric(use.age),
+  clusters <- list.regions # Gets all clusters with their region for this classification.
+  criteria = list('crime' = as.numeric(use.crime), 'age' = as.numeric(use.age),   # Creates the criteria JSON object
                   'diploma' = as.numeric(use.diploma), 'gdp' = as.numeric(use.gdp),
                   'unemployment' = as.numeric(use.unemployment))
   
-  #tmp <- list(year=2009, criteria=criteria)
-  tmp <- list('newregion' = as.numeric(region.new), criteria = criteria, 'year' = as.numeric(year), 'score' = regions[[year]]$score, 'clusters' = c(classes))
+  # Aggregates the clustering result to match the JSON clustering schema
+  clusters.result <- list('newregion' = as.numeric(region.new), criteria = criteria, 'year' = as.numeric(year), 
+                          'score' = regions[[year]]$score, 'clusters' = c(clusters))
   
-  # Converts to JSON and writes the result to a file. 
-  regions$result.json <- toJSON(tmp, pretty = pretty, auto_unbox = TRUE)
+  # Converts to JSON
+  regions$result.json <- toJSON(cluster.result, pretty = pretty, auto_unbox = TRUE)
   return(regions$result.json)
-  #write(regions.jsonResult, file = paste(path, filename, sep = ""))
 }
 
 # Clustering
