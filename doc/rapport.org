@@ -26,13 +26,20 @@ Lorsque l'utilisateur choisit des critères et une année depuis l'interface, l'
 puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la bibliothèque d3js.
 
 
-* Choix des technologies
-
-- Backend: 
-   - framework play
-   - base de donnée mongodb
-- Frontend:
-  - leaflet
-  - Angularjs
-  - d3js
-   - grunt
+* Choix des technologies:
+Plusieurs technologies ont été utilisées pour le projet:
+- Pour le traitement des données et la classification des régions, le langage de programmation 
+R est utilisé. Ce choix s'explique par la diversité des traitements proposés par ce langage en particulier 
+pour les algorithmes de machine learning comme la classification non supervisée que nous avons utilisé pour 
+les régions.
+Du côté du Backend pour la classification, le framework play est utilisé pour l'implémentation de l'API REST.
+Ce framework très léger permet d'écrire et de déployer rapidement des applications web en Java. 
+La base de donnée mongodb a été choisie pour le stockage d'une part pour assurer une flexibilité pour le schéma des données 
+mais aussi pour sa représentation des données au format json que nous utilisons pour le traitement et l'affichage des données. 
+Pour le frontend, nous avons utilisé le framework angularjs car il permet de développer rapidement des applications interactives 
+en utilisant le  patron de conception Modèle-Vue-Contrôlleur et des concepts comme l'injection de dépendances et le  
+/two way data binding/. 
+Pour la visualisation de la partie correlation, la bibliothèque d3js est utilisée. Cette bibliothèque permet 
+de produire des visualisations dynamiques à l'aide des standards svg, html5 et css. 
+Enfin, la bibliothèque Leaflet permet d'afficher les deux cartes pour la classification. 
+Pour l'automatisation des différentes tâches de développement l'outil Grunt est utilisé.
