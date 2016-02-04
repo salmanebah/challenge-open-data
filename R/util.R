@@ -20,7 +20,8 @@ inc <- function(x)
 
 ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.diploma = TRUE, 
                                  use.gdp = TRUE, use.unemployment = TRUE, pretty = FALSE,
-                                 path = "../mongoDB-init/", filename = "classification", year) {
+                                 path = "../mongoDB-init/", filename = "classification", year, 
+                                 region.new = 1) {
   # Writes the result of the classification in JSON
   # Args:
   #   regions  : A vector containing the region ids, its names, the result of the clustering
@@ -99,7 +100,7 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
                   'unemployment' = as.numeric(use.unemployment))
   
   #tmp <- list(year=2009, criteria=criteria)
-  tmp <- list(criteria = criteria, 'year' = as.numeric(year), 'score' = regions[[year]]$score, classes = c(classes))
+  tmp <- list('newregion' = as.numeric(region.new), criteria = criteria, 'year' = as.numeric(year), 'score' = regions[[year]]$score, classes = c(classes))
   
   # Converts to JSON and writes the result to a file. 
   regions$result.json <- toJSON(tmp, pretty = pretty, auto_unbox = TRUE)
@@ -110,7 +111,7 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
 # Clustering
 ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.min = 3, 
                             cluster.max = 10, filename = "classification.json",
-                            path = "../mongoDB-init/") {
+                            path = "../mongoDB-init/", region.new = TRUE) {
   # Checks the required libraries are loaded. 
   for (package in c('fpc', 'testit')) {
     if (!require(package, character.only=T, quietly=T)) {
@@ -246,7 +247,7 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
                                    use.diploma = ifelse(is.null(diploma), FALSE, TRUE),
                                    use.gdp     = ifelse(is.null(gdp), FALSE, TRUE),
                                    use.unemployment = ifelse(is.null(unemployment), FALSE, TRUE), 
-                                   year = year)
+                                   year = year, region.new = region.new)
     result.json <- paste(result.json, tmp, sep = "\n")
     
   }
