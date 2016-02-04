@@ -95,7 +95,7 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
   
   classes <- list.regions 
   criteria = list('crime' = as.numeric(use.crime), 'population' = as.numeric(use.age),
-                  'education' = as.numeric(use.diploma), 'APB' = as.numeric(use.gdp),
+                  'education' = as.numeric(use.diploma), 'gdp' = as.numeric(use.gdp),
                   'employment' = as.numeric(use.unemployment))
   
   #tmp <- list(year=2009, criteria=criteria)
@@ -141,7 +141,7 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
   }
   
   if (!is.null(criteria$gdp)) {
-    variableNames <- c(variableNames, "GDP")
+    variableNames <- c(variableNames, "gdp")
     gdp <- criteria$gdp
     inc(criteria$nbCriteria)
   }
@@ -188,7 +188,7 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
     }
     
     if (!is.null(gdp[[year]])) {
-      regions$data[year, , 'GDP'] <- gdp[[year]]
+      regions$data[year, , 'gdp'] <- gdp[[year]]
       inc(nbValidCriteria)
     }
     
@@ -277,22 +277,90 @@ GetValues <- function (x, colname, hash) {
 }
 
 GetDataFromAllColumns <- function(x, hash) {
-  result <- c()
+  result <- vector('list')
   for (colname in colnames(x)) {
-    result <- c(result, list(GetValues(x, colname, hash)))
+    result <- c(result, GetValues(x, colname, hash))
   }
   return (result)
 } 
 
 FormatDataByYear <- function(x, years, hash) {
   result <- c()
+  criteria <- vector('list') # Contains a list of the critera
   for (year in as.character(years)) {
-    x.year <- x[year, ,]
-    x.use <- x.year[, colSums(is.na(x.year)) != nrow(x.year)]
+    x.year    <- x[year, ,]
+    x.use     <- x.year[, colSums(is.na(x.year)) != nrow(x.year)]
+    x.not.use <- x.year[, colSums(is.na(x.year)) > 0]
+    
+    # Build the criteria list with the criteria name as key and a boolean as value
+    criteria <- ColNameToList(x.use)
+    criteria <- c(criteria, ColNameToList(x.not.use, value = FALSE))
+    
+    # Get all data for this year
     result.year <- vector('list')
-    result.year[[year]] <- GetDataFromAllColumns(x.use, hash)
+    result.year[[year]] <- c(list('criteria' = criteria), 
+                             GetDataFromAllColumns(x.use, hash))
     result <- c(result, result.year)
   }
   
   return (list('years' = result))
 }
+
+
+ColNameToList <- function(x, value = TRUE) {
+  
+  # Create a list with colname of x as keys and the given value as value
+  result <- vector('list')
+  for(colname in colnames(x)) {
+    result[[colname]] <- value
+  }
+  return (result)
+} 
+
+GetAllValidYears <- function(x, mat) {
+  result <- c()
+  mat.three.criteria <- mat[rowSums(mat) == 3, ]
+  
+  for (row in 1:nrow(mat.three.criteria)) {
+    criteria.selected.colnames <- c()
+    criteria.selected <- list('crime' = FALSE, 'unemployment' = FALSE, 'gdp' = FALSE, 
+                              'age' = FALSE, 'diploma' = FALSE)
+    
+    if (mat.three.criteria[row, 'crime']) {
+      criteria.selected[['crime']] <- TRUE
+      criteria.selected.colnames <- c(criteria.selected.colnames, 'crime')
+    }
+    
+    if (mat.three.criteria[row, 'gdp']) {
+      criteria.selected[['gdp']] <- TRUE
+      criteria.selected.colnames <- c(criteria.selected.colnames, 'gdp')
+      
+    }
+    
+    if (mat.three.criteria[row, 'unemployment']) {
+      criteria.selected[['unemployment']] <- TRUE
+      criteria.selected.colnames <- c(criteria.selected.colnames, 'unemployment')
+    }
+    
+    
+    if (mat.three.criteria[row, 'age']) {
+      criteria.selected[['age']] <- TRUE
+      criteria.selected.colnames <- c(criteria.selected.colnames, '0 à 19 ans')
+    }
+    
+    if (mat.three.criteria[row, 'diploma']) {
+      criteria.selected[['diploma']] <- TRUE
+      criteria.selected.colnames <- c(criteria.selected.colnames, 'diploma')
+    }
+    x.use <- x[, '11', criteria.selected.colnames]
+    result <- c(result, list(GetValidYears(x.use, criteria.selected)))
+    
+  }
+  return(result)
+}
+
+GetValidYears <- function(x.use, criteria.selected) {
+  row.no.na <- rownames(x.use[rowSums(is.na(x.use)) == 0, ])
+  valid.years <- c(as.numeric(row.no.na))
+  return (c(criteria.selected, list(years = valid.years)))
+} 

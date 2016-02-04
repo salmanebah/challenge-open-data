@@ -35,6 +35,7 @@ module.exports = function(config) {
       'app/bower_components/ui-leaflet/dist/ui-leaflet.js',
       'app/bower_components/materialize/bin/materialize.js',
       'app/bower_components/angular-materialize/src/angular-materialize.js',
+      'app/bower_components/d3/d3.js',
       'app/bower_components/angular-mocks/angular-mocks.js',
       // endbower
       "app/scripts/**/*.js",

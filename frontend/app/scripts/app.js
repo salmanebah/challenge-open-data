@@ -26,6 +26,11 @@ angular
         templateUrl: 'views/classification.html',
         controller: 'ClassificationCtrl'
       })
+      .when('/correlation', {
+        templateUrl: 'views/correlation.html',
+        controller: 'CorrelationCtrl',
+        controllerAs: 'correlation'
+      })
       .otherwise({
         redirectTo: '/classification'
       });

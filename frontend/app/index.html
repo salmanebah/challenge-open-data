@@ -14,6 +14,7 @@
     <!-- endbuild -->
     <!-- build:css(.tmp) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/bubble-chart.css">
     <!-- endbuild -->
   </head>
   <body ng-app="challengeOpenDataApp">
@@ -27,6 +28,7 @@
         <a href="#" class="brand-logo">Challenge Open Data</a>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
           <li><a href="#/classification">Clustering</a></li>
+          <li><a href="#/correlation">Correlation</a></li>
           <li><a href="#/comparaison">Comparaison</a></li>
         </ul>
       </div>
@@ -55,6 +57,7 @@
     <script src="bower_components/ui-leaflet/dist/ui-leaflet.js"></script>
     <script src="bower_components/materialize/bin/materialize.js"></script>
     <script src="bower_components/angular-materialize/src/angular-materialize.js"></script>
+    <script src="bower_components/d3/d3.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
@@ -62,6 +65,9 @@
         <script src="scripts/app.js"></script>
         <script src="scripts/controllers/classification.js"></script>
         <script src="scripts/services/classification.js"></script>
+        <script src="scripts/controllers/correlation.js"></script>
+        <script src="scripts/services/correlation.js"></script>
+        <script src="scripts/services/correlation-data.js"></script>
         <!-- endbuild -->
 </body>
 </html>
