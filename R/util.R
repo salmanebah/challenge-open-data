@@ -319,7 +319,7 @@ ColNameToList <- function(x, value = TRUE) {
 
 GetAllValidYears <- function(x, mat) {
   result <- c()
-  mat.three.criteria <- mat[rowSums(mat) == 3, ]
+  mat.three.criteria <- mat[rowSums(mat) <= 3, ]
   
   for (row in 1:nrow(mat.three.criteria)) {
     criteria.selected.colnames <- c()
@@ -360,7 +360,9 @@ GetAllValidYears <- function(x, mat) {
 }
 
 GetValidYears <- function(x.use, criteria.selected) {
-  row.no.na <- rownames(x.use[rowSums(is.na(x.use)) == 0, ])
-  valid.years <- c(as.numeric(row.no.na))
-  return (c(criteria.selected, list(years = valid.years)))
+  x.use <- as.matrix(x.use)
+  row.no.na <- which(rowSums(is.na(x.use)) == 0, arr.ind = TRUE)
+  row.no.na.years <- rownames(as.matrix(row.no.na))
+  valid.years <- c(as.numeric(row.no.na.years))
+  return (c(list('criteria' = criteria.selected), list('years' = c(valid.years))))
 } 
