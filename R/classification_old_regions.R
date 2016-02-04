@@ -2,10 +2,10 @@
 source('util.R')
 
 # Prepares data 
-crime <- read.csv("../data/crimes-2012-2002.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
-unemployment <- read.csv("../data/chomage-2000T1-20011T4-region-2016.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
-gdp <- read.csv("../data/pib.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
-diploma <- read.csv("../data/diploma.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
+crime <- read.csv("../data/old_regions/crimes-region-2002-2012.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
+unemployment <- read.csv("../data/old_regions/chomage-region-1990-2011.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
+gdp <- read.csv("../data/old_regions/pib-region-2002-2009.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
+diploma <- read.csv("../data/old_regions/diploma-region-1990-2011.csv", header=TRUE, sep = ",", dec = ".", check.names = FALSE)
 
 # Reads population data from 1990 to 2015
 years <- seq(1990, 2015)
@@ -13,7 +13,7 @@ age <- vector("list", length(years))
 names(age) <- years
 
 for(year in as.character(years)) {
-  path = paste("../data/pop-region-", year, ".csv", sep = "")
+  path = paste("../data/old_regions/pop-region-", year, ".csv", sep = "")
   tmp <- read.csv(path, header=TRUE, sep = ",", dec = ".", check.names = FALSE)
   tmp <- tmp[order(tmp$Code),]
   age[[year]] <- tmp
@@ -25,7 +25,6 @@ crime <- crime[order(crime$Code), ]
 diploma <- diploma[order(diploma$Code), ]
 unemployment <- unemployment[order(unemployment$Code), ]
 gdp <- gdp[order(gdp$Code), ]
-
 # #Sorts regions according to their code
 # crimes <- crimes[order(crimes$Code),]
 # unemployment <- unemployment[order(unemployment$Code),]
@@ -113,7 +112,7 @@ for (row in 1:mat.nbCombination) {
   criteria$diploma  <- NULL
   criteria$gdp      <- NULL
   criteria$unemployment <- NULL
-  criteria$filename <- "classification-new-region"
+  criteria$filename <- "classification-old-region"
   
     if (mat[row, 'crime']) {
     criteria$crime    <- crime  
@@ -141,13 +140,19 @@ for (row in 1:mat.nbCombination) {
   }
   criteria$filename <- paste(criteria$filename, "json", sep = ".")
   regions.cluster[[as.character(row)]] <- ClassifyRegions(regions, criteria, years = seq(1990, 2015), 
-                                     cluster.min = 2, cluster.max = 10, 
-                                     filename = criteria$filename)
+                                     cluster.min = 3, cluster.max = 10, 
+                                     filename = criteria$filename, region.new = 0)
 }  
 
 # Write raw data year by year in JSON format
 library(hash)
 regions.names.hash <- hash(keys=regions$code, values=regions$names)
 data.all.criteria <- regions.cluster$`31`$data
-data.brute <- toJSON(FormatDataByYear(data.all.criteria, hash = regions.names.hash, seq(1990, 2015)), auto_unbox = TRUE)
-write(data.brute, file = '../mongoDB-init/years.json')
+data.brute <- toJSON(FormatDataByYear(data.all.criteria, hash = regions.names.hash, seq(1990, 2015)), 
+                     auto_unbox = TRUE)
+write(data.brute, file = '../mongoDB-init/years_old_region.json')
+
+# Get years where all three criteria contains  data 
+valid.years <- toJSON(GetAllValidYears(data.all.criteria, mat), auto_unbox = TRUE)
+write(valid.years, file = '../mongoDB-init/valid_years_old_region.json')
+
