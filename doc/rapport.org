@@ -22,6 +22,8 @@ cartes.
 
 Pour la partie correlation, l'application n'est composée que d'un /frontend/ utilisant les technologies angularjs et d3js. 
 Les données correspondant à chaque région sont directement stockées dans un objet JSON pour accélérer la recherche par critère.
+Lorsque l'utilisateur choisit des critères et une année depuis l'interface, l'échelle des deux axes X et Y est dynamiquement mis à jour
+puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la bibliothèque d3js.
 
 
 * Choix des technologies
