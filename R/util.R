@@ -94,9 +94,9 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
   }
   
   classes <- list.regions 
-  criteria = list('crime' = as.numeric(use.crime), 'population' = as.numeric(use.age),
-                  'education' = as.numeric(use.diploma), 'gdp' = as.numeric(use.gdp),
-                  'employment' = as.numeric(use.unemployment))
+  criteria = list('crime' = as.numeric(use.crime), 'age' = as.numeric(use.age),
+                  'diploma' = as.numeric(use.diploma), 'gdp' = as.numeric(use.gdp),
+                  'unemployment' = as.numeric(use.unemployment))
   
   #tmp <- list(year=2009, criteria=criteria)
   tmp <- list(criteria = criteria, 'year' = as.numeric(year), 'score' = regions[[year]]$score, classes = c(classes))
