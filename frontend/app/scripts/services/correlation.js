@@ -27,6 +27,7 @@ angular.module('challengeOpenDataApp')
 	var xAxis;
 	var yAxis;
 	var circles;
+	var tooltip;
 	
 	var colorArray = ["#1f77b4", "#e7ba52", "#2ca02c", "#8c564b",
 			  "#bcbd22", "#8c6d31", "#990099", "#993333",
@@ -97,7 +98,10 @@ angular.module('challengeOpenDataApp')
 	    svg = d3.select("#bubble-chart").append("svg")
 		    .attr("height", height + margin.left + margin.right)
 		    .attr("width", width + margin.top + margin.bottom);
-	    
+
+	    tooltip = d3.select("body").append("div")	
+		    .attr("class", "tooltip")				
+		    .style("opacity", 0);
 	    chart = svg.append("g")
 		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 	};
@@ -140,7 +144,7 @@ angular.module('challengeOpenDataApp')
 	    
 	    chart.append("g")
 		.attr("class", "y axis")
-		.attr("transform", "translate(0," + padding + ",0)")
+		.attr("transform", "translate(" + padding + ",0)")
 		.call(yAxis)
 		.append("text")
 		.attr("class", "ylabel")
@@ -186,13 +190,28 @@ angular.module('challengeOpenDataApp')
 		.attr("cx", function(d) { return xScale(d.xCriterion.value); })
 		.attr("cy", function(d) { return yScale(d.yCriterion.value); })
 		.attr("r", 0)
+	    	.on("mouseover", function(d) {		
+		    tooltip.transition()		
+			.duration(200)		
+			.style("opacity", 0.9);		
+		    tooltip.html("Région:" + d.region.name + "<br/>" +
+				 d.xCriterion.name + ": " + d.xCriterion.value + "<br/>" + 
+				 d.yCriterion.name + ": " + d.yCriterion.value + "<br/>" +
+				 d.sizeCriterion.name + ": " + d.sizeCriterion.value + "<br/>")	
+			.style("left", (d3.event.pageX) + "px")		
+			.style("top", (d3.event.pageY - 28) + "px");	
+		})					
+		.on("mouseout", function() {		
+		    tooltip.transition()		
+			.duration(500)		
+			.style("opacity", 0);
+		    
+		})
 		.transition()
 		.attr("r", function(d)  { return rScale(d.sizeCriterion.value);})	  
-	        //TODO: update the color according to the region
 		.style("fill", function(d) { var id = d.region.id; return colorMap[id];})
 	        .style("opacity", opacity);
-	};
-
+	} ;
 	// Called once to setup the context
 	initSvg();
 	d3Service.drawChart = function(data) {
