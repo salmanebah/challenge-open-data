@@ -320,37 +320,36 @@ ColNameToList <- function(x, value = TRUE) {
 
 GetAllValidYears <- function(x, mat) {
   result <- c()
-  mat.three.criteria <- mat[rowSums(mat) <= 3, ]
   
-  for (row in 1:nrow(mat.three.criteria)) {
+  for (row in 1:nrow(mat)) {
     criteria.selected.colnames <- c()
-    criteria.selected <- list('crime' = FALSE, 'unemployment' = FALSE, 'gdp' = FALSE, 
-                              'age' = FALSE, 'diploma' = FALSE)
+    criteria.selected <- list('crime' = 0, 'unemployment' = 0, 'gdp' = 0, 
+                              'age' = 0, 'diploma' = 0)
     
-    if (mat.three.criteria[row, 'crime']) {
-      criteria.selected[['crime']] <- TRUE
+    if (mat[row, 'crime']) {
+      criteria.selected[['crime']] <- 1
       criteria.selected.colnames <- c(criteria.selected.colnames, 'crime')
     }
     
-    if (mat.three.criteria[row, 'gdp']) {
-      criteria.selected[['gdp']] <- TRUE
+    if (mat[row, 'gdp']) {
+      criteria.selected[['gdp']] <- 1
       criteria.selected.colnames <- c(criteria.selected.colnames, 'gdp')
       
     }
     
-    if (mat.three.criteria[row, 'unemployment']) {
-      criteria.selected[['unemployment']] <- TRUE
+    if (mat[row, 'unemployment']) {
+      criteria.selected[['unemployment']] <- 1
       criteria.selected.colnames <- c(criteria.selected.colnames, 'unemployment')
     }
     
     
-    if (mat.three.criteria[row, 'age']) {
-      criteria.selected[['age']] <- TRUE
+    if (mat[row, 'age']) {
+      criteria.selected[['age']] <- 1
       criteria.selected.colnames <- c(criteria.selected.colnames, '0 à 19 ans')
     }
     
-    if (mat.three.criteria[row, 'diploma']) {
-      criteria.selected[['diploma']] <- TRUE
+    if (mat[row, 'diploma']) {
+      criteria.selected[['diploma']] <- 1
       criteria.selected.colnames <- c(criteria.selected.colnames, 'diploma')
     }
     x.use <- x[, '11', criteria.selected.colnames]
