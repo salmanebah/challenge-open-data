@@ -1,0 +1,12 @@
+* Introduction
+  - Développer application web de visualisation interactive de données
+
+* Source des données 
+  Les données ont été récupérées sur le site 
+
+* Traitement effectués 
+
+* Architecture 
+
+* Choix des technologies
+ 
