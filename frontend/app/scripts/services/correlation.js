@@ -28,7 +28,7 @@ angular.module('challengeOpenDataApp')
 	var yAxis;
 	var circles;
 	var tooltip;
-	
+
 	var colorArray = ["#1f77b4", "#e7ba52", "#2ca02c", "#8c564b",
 			  "#bcbd22", "#8c6d31", "#990099", "#993333",
 			  "#99cc00", "#cc3300", "#0099ff", "#ff9900",
@@ -47,7 +47,7 @@ angular.module('challengeOpenDataApp')
 			 93: colorArray[11],
 			 94: colorArray[12]
 		       };
-			 
+
 	var buildData = function(ctx) {
 	    var xCriterionCtx = ctx.xCriterion;
 	    var yCriterionCtx = ctx.yCriterion;
@@ -99,8 +99,8 @@ angular.module('challengeOpenDataApp')
 		    .attr("height", height + margin.left + margin.right)
 		    .attr("width", width + margin.top + margin.bottom);
 
-	    tooltip = d3.select("body").append("div")	
-		    .attr("class", "tooltip")				
+	    tooltip = d3.select("body").append("div")
+		    .attr("class", "tooltip")
 		    .style("opacity", 0);
 	    chart = svg.append("g")
 		    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -111,12 +111,12 @@ angular.module('challengeOpenDataApp')
 		.domain([d3.min(data, function(d) { return d.xCriterion.value;}),
 			 d3.max(data, function(d) { return d.xCriterion.value; })])
 		    .range([padding,  width - padding * 2]);
-	    
+
 	    yScale = d3.scale.linear()
 	  	.domain([d3.min(data, function(d) { return d.yCriterion.value;}),
 			 d3.max(data, function(d) { return d.yCriterion.value; })])
 		    .range([height - padding,  padding]);
-	    
+
 	    rScale = d3.scale.linear()
 		    .domain([0, d3.max(data, function(d) { return d.sizeCriterion.value; })])
 		    .range([10, 30]);
@@ -141,7 +141,7 @@ angular.module('challengeOpenDataApp')
 	var updateYaxis = function(data) {
 	    chart.selectAll(".y.axis").transition().duration(500).call(yAxis);
 	    chart.selectAll("text.ylabel").text("");
-	    
+
 	    chart.append("g")
 		.attr("class", "y axis")
 		.attr("transform", "translate(" + padding + ",0)")
@@ -158,7 +158,7 @@ angular.module('challengeOpenDataApp')
 	var updateAxis = function(data) {
 	    xAxis = d3.svg.axis()
 		.scale(xScale)
-		.orient("bottom");	    
+		.orient("bottom");
 	    yAxis = d3.svg.axis()
 		.scale(yScale)
 		.orient("left");
@@ -178,7 +178,7 @@ angular.module('challengeOpenDataApp')
 	    circles
 		.transition()
 		.duration(duration)
-		.delay(function(d, i) {delay = i * delayStep; return delay;}) 
+		.delay(function(d, i) {delay = i * delayStep; return delay;})
 		.attr("cx", function(d) { return xScale(d.xCriterion.value); })
 		.attr("cy", function(d) { return yScale(d.yCriterion.value); })
 		.attr('r', function(d) { return rScale(d.sizeCriterion.value); })
@@ -190,25 +190,25 @@ angular.module('challengeOpenDataApp')
 		.attr("cx", function(d) { return xScale(d.xCriterion.value); })
 		.attr("cy", function(d) { return yScale(d.yCriterion.value); })
 		.attr("r", 0)
-	    	.on("mouseover", function(d) {		
-		    tooltip.transition()		
-			.duration(200)		
-			.style("opacity", 0.9);		
+	    	.on("mouseover", function(d) {
+		    tooltip.transition()
+			.duration(200)
+			.style("opacity", 0.9);
 		    tooltip.html("Région:" + d.region.name + "<br/>" +
-				 d.xCriterion.name + ": " + d.xCriterion.value + "<br/>" + 
+				 d.xCriterion.name + ": " + d.xCriterion.value + "<br/>" +
 				 d.yCriterion.name + ": " + d.yCriterion.value + "<br/>" +
-				 d.sizeCriterion.name + ": " + d.sizeCriterion.value + "<br/>")	
-			.style("left", (d3.event.pageX) + "px")		
-			.style("top", (d3.event.pageY - 28) + "px");	
-		})					
-		.on("mouseout", function() {		
-		    tooltip.transition()		
-			.duration(500)		
+				 d.sizeCriterion.name + ": " + d.sizeCriterion.value + "<br/>")
+			.style("left", (d3.event.pageX) + "px")
+			.style("top", (d3.event.pageY - 28) + "px");
+		})
+		.on("mouseout", function() {
+		    tooltip.transition()
+			.duration(500)
 			.style("opacity", 0);
-		    
+
 		})
 		.transition()
-		.attr("r", function(d)  { return rScale(d.sizeCriterion.value);})	  
+		.attr("r", function(d)  { return rScale(d.sizeCriterion.value);})
 		.style("fill", function(d) { var id = d.region.id; return colorMap[id];})
 	        .style("opacity", opacity);
 	} ;
@@ -217,8 +217,8 @@ angular.module('challengeOpenDataApp')
 	d3Service.drawChart = function(data) {
 	    updateScale(data);
 	    updateAxis(data);
-	    drawRegions(data);	  
+	    drawRegions(data);
 	};
-	
+
 	return d3Service;
   });

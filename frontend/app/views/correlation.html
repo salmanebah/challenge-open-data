@@ -1,20 +1,27 @@
-<div>
-      <div id="bubble-chart"></div>
-      <div>
-	    <section>
-		  <button ng-click="previous(0)"> Précedent</button>
-		  <label>{{currentCriterion[0].name}}</label>
-		  <button ng-click="next(1)"> Suivant</button>	    
-	    </section>
-	    <section>
-		  <button ng-click="previous(1)"> Précedent</button>
-		  <label>{{currentCriterion[1].name}}</label>
-		  <button ng-click="next(1)">Suivant</button>	    
-	    </section>
-	    <section>
-		  <button ng-click="previous(2)"> Précedent</button>
-		  <label>{{currentCriterion[2].name}}</label>
-		  <button ng-click="next(2)">Suivant</button>	    
-	    </section>
-      </div>
-</dvi>
+<div class="container">
+  <div id="bubble-chart"></div>
+  <div>
+    <section>
+      <button ng-click="previous(0)"> Précedent</button>
+      <label>{{currentCriterion[0].name}}</label>
+      <button ng-click="next(0)"> Suivant</button>
+    </section>
+    <section>
+      <button ng-click="previous(1)"> Précedent</button>
+      <label>{{currentCriterion[1].name}}</label>
+      <button ng-click="next(1)">Suivant</button>
+    </section>
+    <section>
+      <button ng-click="previous(2)"> Précedent</button>
+      <label>{{currentCriterion[2].name}}</label>
+      <button ng-click="next(2)">Suivant</button>
+    </section>
+  </div>
+  <div>
+    {{years}}
+  </div>
+
+  <select class="" ng-model="year" material-select watch>
+    <option ng-repeat="value in years">{{value}}</option>
+  </select>
+</div>
