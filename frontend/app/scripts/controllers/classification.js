@@ -38,25 +38,31 @@ angular.module('challengeOpenDataApp')
       'population': 0
     };
     var clusters = [];
+    var clusters2015 = [];
     var colors = ['black', 'yellow', 'green', 'brown', 'red', 'pink'];
 
     function init() {
       angular.extend($scope, {
         defaults: {
           scrollWheelZoom: true,
-          tileLayer: "http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png"
+          tileLayer: 'http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png'
         },
         maxbounds: maxbounds,
         france: france,
         criteria: criteria,
         clusters: clusters,
+        clusters2015 : clusters2015,
         colors: colors,
         geojson: {
           data: [],
           style: function (feature) {
             return $scope.getStyle(feature);
           }
-        }
+        },
+        geojson2015 : {
+          data : []
+        },
+        year : 2006
       });
 
       $scope.layer = L.geoJson();
@@ -64,6 +70,11 @@ angular.module('challengeOpenDataApp')
         .success(function (data) {
           $scope.geojson.data = data;
         });
+      $http.get('/maps/regions-2015-simplifie.json')
+        .success(function (data) {
+          $scope.geojson2015.data = data;
+        });
+
 
     }
 
@@ -89,7 +100,7 @@ angular.module('challengeOpenDataApp')
       };
       if ((count % 2 ) === 0) {
         console.log('red');
-        $scope.geojson.style = {fillColor: 'red'}
+        $scope.geojson.style = {fillColor: 'red'};
       } else if ((count % 2) === 1) {
         $scope.geojson.style = {fillColor: 'blue'};
         console.log('blue');
@@ -97,7 +108,7 @@ angular.module('challengeOpenDataApp')
       count++;
 
       if (JSON.stringify(empty) !== JSON.stringify($scope.criteria)) {
-        $http.post('/api/classification/2006', $scope.criteria)
+        $http.post('/api/classification/' + $scope.year, $scope.criteria)
           .success(function (data) {
             $scope.clusters = data.clusters;
             $scope.geojson.style = function (feature) {
@@ -130,6 +141,14 @@ angular.module('challengeOpenDataApp')
       }
       return -1;
     };
+    $scope.$watch('criteria', function () {
+      console.log('criteria has changed');
+      console.log(criteria);
+    }, true);
+    $scope.$watch('year', function () {
+      console.log('year has changed');
+      console.log(year);
+    }, true);
     /*
      function mouseOverHandler(event) {
      console.log(event.type);
