@@ -60,36 +60,33 @@
      directement dans le navigateur.
 
 * Architecture 
-Pour la partie classification, /l'application/ est organisée en deux composants: un /backend/ REST et un /frontend/ utilisant le 
+Pour la partie classification, l'application est organisée en deux composants: un backend REST et un frontend utilisant le 
 framework angularjs. 
 Le backend implémente le service de la classification des régions en prenant en compte des requêtes *POST* contenant le critère 
-de classification souhaité. Pour des raisons de performance, le /backend/ utilise une base de donnée mongodb contenant le résultat 
+de classification souhaité. Pour des raisons de performance, le backend utilise une base de donnée mongodb contenant le résultat 
 prétraités des différents clusters pour les différents critères de classification possible.
-Le /frontend/ se charge  d'afficher la carte des nouvelles régions et celle des anciennes.
+Le frontend se charge  d'afficher la carte des nouvelles régions et celle des anciennes.
 Il intercepte les changements de critère puis effectue la requête POST
 vers l'api REST avant d'afficher les changements sur 
 les différentes cartes.
 
-Pour la partie correlation, l'application n'est composée que d'un /frontend/ utilisant les technologies angularjs et d3js. 
+Pour la partie correlation, l'application n'est composée que d'un frontend utilisant les technologies angularjs et d3js. 
 Les données correspondant à chaque région sont directement stockées dans un objet JSON pour accélérer la recherche par critère.
-Lorsque l'utilisateur choisit des critères et une année depuis
-l'interface, l'échelle des deux axes X et Y est dynamiquement 
-mis à jour puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la bibliothèque d3js.
-
-
+Lorsque l'utilisateur choisit des critères et une année depuis l'interface, l'échelle des deux axes X et Y est dynamiquement 
+mis à jour puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la bibliothèque d3.
 * Choix des technologies:
 Plusieurs technologies ont été utilisées pour le projet:
-- Pour le traitement des données et la classification des régions, le langage de programmation 
+Pour le traitement des données et la classification des régions, le langage de programmation 
 R est utilisé. Ce choix s'explique par la diversité des traitements proposés par ce langage en particulier 
 pour les algorithmes de machine learning comme la classification non supervisée que nous avons utilisé pour 
 les régions.
-Du côté du Backend pour la classification, le framework play est utilisé pour l'implémentation de l'API REST.
+Du côté Backend pour la classification, le framework play est utilisé pour l'implémentation de l'API REST.
 Ce framework très léger permet d'écrire et de déployer rapidement des applications web en Java. 
 La base de donnée mongodb a été choisie pour le stockage d'une part pour assurer une flexibilité pour le schéma des données 
-mais aussi pour sa représentation des données au format json que nous utilisons pour le traitement et l'affichage des données. 
-Pour le frontend, nous avons utilisé le framework angularjs car il permet de développer rapidement des applications interactives 
-en utilisant le  patron de conception Modèle-Vue-Contrôlleur et des concepts comme l'injection de dépendances et le  
-/two way data binding/. 
+mais aussi pour sa représentation des données au format JSON que nous utilisons pour le traitement et l'affichage des données. 
+Pour le frontend, nous avons utilisé le framework Angularjs car il permet de développer rapidement des applications intéractives 
+en utilisant le  patron de conception Modèle-Vue-Contrôlleur, l'injection de dépendances et le  
+/two way data binding/ qui permet de mettre à jour automatiquement le modèle ou la vue lorsque l'un d'entre eux est modifié.
 Pour la visualisation de la partie correlation, la bibliothèque d3js est utilisée. Cette bibliothèque permet 
 de produire des visualisations dynamiques à l'aide des standards svg, html5 et css. 
 Enfin, la bibliothèque Leaflet permet d'afficher les deux cartes pour la classification. 

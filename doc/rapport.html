@@ -3,30 +3,23 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2016-02-04 jeu. 21:07 -->
+<title>rapport</title>
+<!-- 2016-02-04 jeu. 21:33 -->
 <meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
-<meta  name="viewport" content="width=device-width, initial-scale=1" />
-<title></title>
 <meta  name="generator" content="Org-mode" />
-<meta  name="author" content="Orto" />
+<meta  name="author" content="salmane" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
-  .title  { text-align: center;
-             margin-bottom: .2em; }
-  .subtitle { text-align: center;
-              font-size: medium;
-              font-weight: bold;
-              margin-top:0; }
+  .title  { text-align: center; }
   .todo   { font-family: monospace; color: red; }
-  .done   { font-family: monospace; color: green; }
-  .priority { font-family: monospace; color: orange; }
+  .done   { color: green; }
   .tag    { background-color: #eee; font-family: monospace;
             padding: 2px; font-size: 80%; font-weight: normal; }
   .timestamp { color: #bebebe; }
   .timestamp-kwd { color: #5f9ea0; }
-  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
-  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
-  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
   .underline { text-decoration: underline; }
   #postamble p, #preamble p { font-size: 90%; margin: .2em; }
   p.verse { margin-left: 3%; }
@@ -65,14 +58,15 @@
   caption.t-above { caption-side: top; }
   caption.t-bottom { caption-side: bottom; }
   td, th { vertical-align:top;  }
-  th.org-right  { text-align: center;  }
-  th.org-left   { text-align: center;   }
-  th.org-center { text-align: center; }
-  td.org-right  { text-align: right;  }
-  td.org-left   { text-align: left;   }
-  td.org-center { text-align: center; }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
   dt { font-weight: bold; }
-  .footpara { display: inline; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
   .footdef  { margin-bottom: 1em; }
   .figure { padding: 1em; }
   .figure p { text-align: center; }
@@ -143,25 +137,26 @@ for the JavaScript code in this tag.
 </head>
 <body>
 <div id="content">
+<h1 class="title">rapport</h1>
 <div id="table-of-contents">
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgheadline1">1. Introduction</a></li>
-<li><a href="#orgheadline2">2. Source des données</a></li>
-<li><a href="#orgheadline7">3. Traitements des données</a>
+<li><a href="#sec-1">1. Introduction</a></li>
+<li><a href="#sec-2">2. Source des données</a></li>
+<li><a href="#sec-3">3. Traitements des données</a>
 <ul>
-<li><a href="#orgheadline3">3.1. Classification des régions</a></li>
-<li><a href="#orgheadline6">3.2. Traitements</a></li>
+<li><a href="#sec-3-1">3.1. Classification des régions</a></li>
+<li><a href="#sec-3-2">3.2. Traitements</a></li>
 </ul>
 </li>
-<li><a href="#orgheadline8">4. Architecture</a></li>
-<li><a href="#orgheadline9">5. Choix des technologies:</a></li>
+<li><a href="#sec-4">4. Architecture</a></li>
+<li><a href="#sec-5">5. Choix des technologies:</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgheadline1" class="outline-2">
-<h2 id="orgheadline1"><span class="section-number-2">1</span> Introduction</h2>
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Introduction</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 Le projet challenge open data est organisé à l'ENSIMAG lors de la
@@ -182,8 +177,8 @@ différences qui existent entre des régions qui ont été fusionnées.
 </div>
 </div>
 
-<div id="outline-container-orgheadline2" class="outline-2">
-<h2 id="orgheadline2"><span class="section-number-2">2</span> Source des données</h2>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Source des données</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 Les données sur le crime, le chômage, le niveau de diplôme et le pib
@@ -195,8 +190,8 @@ directement sur le site de l'INSEE car elles sont plus récentes.
 </div>
 </div>
 
-<div id="outline-container-orgheadline7" class="outline-2">
-<h2 id="orgheadline7"><span class="section-number-2">3</span> Traitements des données</h2>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Traitements des données</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 Nous avons récupéré les données disponibles des cinq critères entre
@@ -204,8 +199,8 @@ Nous avons récupéré les données disponibles des cinq critères entre
 </p>
 </div>
 
-<div id="outline-container-orgheadline3" class="outline-3">
-<h3 id="orgheadline3"><span class="section-number-3">3.1</span> Classification des régions</h3>
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Classification des régions</h3>
 <div class="outline-text-3" id="text-3-1">
 <p>
 L'objectif ici est d'offrir à l'utilisateur de l'application la
@@ -217,10 +212,10 @@ classifications dans une base de données.
 </div>
 </div>
 
-<div id="outline-container-orgheadline6" class="outline-3">
-<h3 id="orgheadline6"><span class="section-number-3">3.2</span> Traitements</h3>
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Traitements</h3>
 <div class="outline-text-3" id="text-3-2">
-</div><ol class="org-ol"><li><a id="orgheadline4"></a>Classification<br  /><div class="outline-text-5" id="text-3-2-0-1">
+</div><ol class="org-ol"><li><a id="sec-3-2-0-1" name="sec-3-2-0-1"></a>Classification<br  /><div class="outline-text-5" id="text-3-2-0-1">
 <p>
 Pour classifier les régions, selon les critères choisis, nous avons
 utilisé l'algorithme PAM (Partion Around Medoids). 
@@ -246,64 +241,59 @@ classification par année.
 Le résultat est ensuite formaté au format JSON pour ensuite être
 inséré dans une base de donnée MongoDB. 
 </p>
-</div></li>
+</div>
+</li>
 
-<li><a id="orgheadline5"></a>Corrélation<br  /><div class="outline-text-5" id="text-3-2-0-2">
+<li><a id="sec-3-2-0-2" name="sec-3-2-0-2"></a>Corrélation<br  /><div class="outline-text-5" id="text-3-2-0-2">
 <p>
 Pour la corrélation, les données brutes sont formatées dans 
 un schéma JSON précis pour faciliter les traitements de la corrélation
 directement dans le navigateur.
 </p>
-</div></li></ol>
+</div>
+</li></ol>
 </div>
 </div>
 
-<div id="outline-container-orgheadline8" class="outline-2">
-<h2 id="orgheadline8"><span class="section-number-2">4</span> Architecture</h2>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Architecture</h2>
 <div class="outline-text-2" id="text-4">
 <p>
-Pour la partie classification, <i>l'application</i> est organisée en deux composants: un <i>backend</i> REST et un <i>frontend</i> utilisant le 
+Pour la partie classification, l'application est organisée en deux composants: un backend REST et un frontend utilisant le 
 framework angularjs. 
 Le backend implémente le service de la classification des régions en prenant en compte des requêtes <b>POST</b> contenant le critère 
-de classification souhaité. Pour des raisons de performance, le <i>backend</i> utilise une base de donnée mongodb contenant le résultat 
+de classification souhaité. Pour des raisons de performance, le backend utilise une base de donnée mongodb contenant le résultat 
 prétraités des différents clusters pour les différents critères de classification possible.
-Le <i>frontend</i> se charge  d'afficher la carte des nouvelles régions et celle des anciennes.
+Le frontend se charge  d'afficher la carte des nouvelles régions et celle des anciennes.
 Il intercepte les changements de critère puis effectue la requête POST
 vers l'api REST avant d'afficher les changements sur 
 les différentes cartes.
 </p>
 
 <p>
-Pour la partie correlation, l'application n'est composée que d'un <i>frontend</i> utilisant les technologies angularjs et d3js. 
+Pour la partie correlation, l'application n'est composée que d'un frontend utilisant les technologies angularjs et d3js. 
 Les données correspondant à chaque région sont directement stockées dans un objet JSON pour accélérer la recherche par critère.
-Lorsque l'utilisateur choisit des critères et une année depuis
-l'interface, l'échelle des deux axes X et Y est dynamiquement 
-mis à jour puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la bibliothèque d3js.
+Lorsque l'utilisateur choisit des critères et une année depuis l'interface, l'échelle des deux axes X et Y est dynamiquement 
+mis à jour puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la bibliothèque d3.
 </p>
 </div>
 </div>
-
-
-<div id="outline-container-orgheadline9" class="outline-2">
-<h2 id="orgheadline9"><span class="section-number-2">5</span> Choix des technologies:</h2>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Choix des technologies:</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 Plusieurs technologies ont été utilisées pour le projet:
-</p>
-<ul class="org-ul">
-<li>Pour le traitement des données et la classification des régions, le langage de programmation</li>
-</ul>
-<p>
+Pour le traitement des données et la classification des régions, le langage de programmation 
 R est utilisé. Ce choix s'explique par la diversité des traitements proposés par ce langage en particulier 
 pour les algorithmes de machine learning comme la classification non supervisée que nous avons utilisé pour 
 les régions.
-Du côté du Backend pour la classification, le framework play est utilisé pour l'implémentation de l'API REST.
+Du côté Backend pour la classification, le framework play est utilisé pour l'implémentation de l'API REST.
 Ce framework très léger permet d'écrire et de déployer rapidement des applications web en Java. 
 La base de donnée mongodb a été choisie pour le stockage d'une part pour assurer une flexibilité pour le schéma des données 
-mais aussi pour sa représentation des données au format json que nous utilisons pour le traitement et l'affichage des données. 
-Pour le frontend, nous avons utilisé le framework angularjs car il permet de développer rapidement des applications interactives 
-en utilisant le  patron de conception Modèle-Vue-Contrôlleur et des concepts comme l'injection de dépendances et le  
-<i>two way data binding</i>. 
+mais aussi pour sa représentation des données au format JSON que nous utilisons pour le traitement et l'affichage des données. 
+Pour le frontend, nous avons utilisé le framework Angularjs car il permet de développer rapidement des applications intéractives 
+en utilisant le  patron de conception Modèle-Vue-Contrôlleur, l'injection de dépendances et le  
+<i>two way data binding</i> qui permet de mettre à jour automatiquement le modèle ou la vue lorsque l'un d'entre eux est modifié.
 Pour la visualisation de la partie correlation, la bibliothèque d3js est utilisée. Cette bibliothèque permet 
 de produire des visualisations dynamiques à l'aide des standards svg, html5 et css. 
 Enfin, la bibliothèque Leaflet permet d'afficher les deux cartes pour la classification. 
@@ -313,8 +303,9 @@ Pour l'automatisation des différentes tâches de développement l'outil Grunt e
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Orto</p>
-<p class="date">Created: 2016-02-04 jeu. 21:07</p>
+<p class="author">Author: salmane</p>
+<p class="date">Created: 2016-02-04 jeu. 21:33</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
