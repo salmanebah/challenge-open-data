@@ -1,0 +1,17 @@
+* Introduction
+  Le projet challenge open data est organisé à l'ENSIMAG lors de la
+  troisième année du cycle ingénieur. L'objectif est de créer une
+  application web de visualisation interactive de données Open
+  data. Dans le cadre de ce projet, nous avons choisi de visualiser
+  des indicateurs socio-économiques pour les régions de la France
+  métropolitaine. L'objectif principale est d'observer les similitudes
+  et différences entre les régions en les classifiant selon les
+  critères suivant : le PIB, l'emploi, l'âge, le crime et le niveau de
+  diplôme. Une deuxième fonctionnalité intéressante avec cette
+  classification, est de pouvoir comparer des anciennes régions qui ont été
+  fusionnés. Pour appronfondir cette analyse, une corrélation sur
+  trois critères différents a été effectuée sur toutes les anciennes
+  régions. Celle-ci permet d'apprécier plus précisemment les
+  différences qui existent entre des régions qui ont été fusionnées.  
+ 
+    

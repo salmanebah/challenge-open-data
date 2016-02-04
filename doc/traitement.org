@@ -1,0 +1,55 @@
+* Source des données
+  Les données sur le crime, le chômage, le niveau de diplôme et le pib
+  ont été récupérer sur le site de France Découverte  http://franceo3.geoclip.fr/, ce sont
+  des données provenant de l'insee. Celles sur la répartition par la
+  population par age ont été récupérées directement sur le site de
+  l'insee car elles sont plus récentes. 
+
+* Traitements des données
+  Nous avons récupéré les données disponibles des cinq critères entre
+  1990 et 2015. 
+
+** Classification des régions
+   L'objectif ici, est d'offrir à l'utilisateur de l'application la
+   possibilité de classifier les régions en combinant les critères
+   qu'il souhaite pour une année donnée. Pour cela, nous avons
+   pré-traiter les données sous R et stocker les résultats des
+   classifications dans une base de données.
+
+*** Traitements  
+**** Classification
+    Pour classifier les régions, selon les critères chosis, nous
+    utilisons l'algorithme PAM (Partion Around Medoids). Un médoïde,
+    en statistique est le représentant le plus central d'une
+    classe. L'algorithme consiste à créer k classes en
+    minimisant l'erreur quadratique moyenne qui est la distance entre
+    les points de la classe et le point central (le médoïde). Le
+    nombre de classe k est choisi dynamiquement en fonction de la
+    silhouette qui est un graphe montrant comment chaque observation 
+    appartient plus ou moins à sa classe. Le script qui fait la
+    classification choisi le nombre de classe k qui maximise cette
+    silhouette. 
+
+    Pour réaliser toutes les classifications, nous avons calculé les
+    combinaisons possibles avec les cinq critères au
+    total 31. Ensuite, pour chaque combinaison nous effectuons une 
+    classification par année. 
+    
+    Le résultat est ensuite formaté au format JSON pour ensuite être
+    inséré dans une base de donnée MongoDB. 
+
+**** Corrélation
+     Pour la corrélation, les données brutes sont formaté dans 
+     schéma JSON pour faciliter les traitements de la corrélation
+     directement dans le navigateur. 
+     
+
+
+    
+
+    
+    
+
+
+
+  
