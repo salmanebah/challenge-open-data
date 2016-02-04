@@ -1,12 +1,21 @@
 * Introduction
+  L'application possède deux fonctionnalités. La première permet de classer les 
+anciennes et les nouvelles régions de la France suivant cinq critères différents: le PIB, l'emploi, 
+l'âge, le crime et le niveau de diplôme. La seconde fonctionnalité permet de visualiser la corrélation
+entre ces différents critères pour toutes les anciennes régions.
   - Développer application web de visualisation interactive de données
 
 * Source des données 
   Les données ont été récupérées sur le site 
 
 * Traitement effectués 
-
+  - 
 * Architecture 
-
+L'application se compose de deux 
 * Choix des technologies
- 
+- Backend: 
+   - framework play
+   - base de donnée mongodb
+- Frontend:
+  - Angularjs
+  - d3js
