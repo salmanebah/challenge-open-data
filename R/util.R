@@ -100,7 +100,7 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
                   'unemployment' = as.numeric(use.unemployment))
   
   #tmp <- list(year=2009, criteria=criteria)
-  tmp <- list('newregion' = as.numeric(region.new), criteria = criteria, 'year' = as.numeric(year), 'score' = regions[[year]]$score, classes = c(classes))
+  tmp <- list('newregion' = as.numeric(region.new), criteria = criteria, 'year' = as.numeric(year), 'score' = regions[[year]]$score, 'clusters' = c(classes))
   
   # Converts to JSON and writes the result to a file. 
   regions$result.json <- toJSON(tmp, pretty = pretty, auto_unbox = TRUE)
