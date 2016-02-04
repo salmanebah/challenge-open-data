@@ -14,9 +14,13 @@ angular.module('challengeOpenDataApp')
       {name: "crime", index: 0},
       {name: "unemployment", index: 1},
       {name: "diploma", index: 2},
-      {name: "GDP", index: 3},
+      {name: "gdp", index: 3},
       {name: "age", index: 4}
     ];
+
+    $scope.year = {};
+    $scope.years = [];
+    var drawer = CorrelationService.drawChart;
 
 
     $http.get('/data/years.json')
@@ -24,16 +28,21 @@ angular.module('challengeOpenDataApp')
         $scope.yearsData = data;
       });
 
-    $scope.year = {};
-    $scope.years = [];
     var getYears = function () {
-      var a = $scope.currentCriterion[0].name;
-      var b = $scope.currentCriterion[1].name;
-      var c = $scope.currentCriterion[2].name;
+      var criteria = {
+        "crime": false,
+        "unemployment": false,
+        "gdp": false,
+        "age": false,
+        "diploma": false
+      };
+      criteria[$scope.currentCriterion[0].name] = true;
+      criteria[$scope.currentCriterion[1].name] = true;
+      criteria[$scope.currentCriterion[2].name] = true;
       for (var i in $scope.yearsData) {
-        var yearsData = $scope.yearsData[i];
-        if ((yearsData[a] === true) && (yearsData[b] === true) && (yearsData[c] === true)) {
-          return yearsData.years;
+        if (JSON.stringify(criteria) === JSON.stringify($scope.yearsData[i].criteria)) {
+          console.log($scope.yearsData[i].years);
+          return $scope.yearsData[i].years;
         }
       }
     };
@@ -49,44 +58,29 @@ angular.module('challengeOpenDataApp')
       var i = getIndex($scope.currentCriterion[pos].index, 1);
       $scope.currentCriterion[pos] = criterion[i];
       $scope.years = getYears();
+      updateDraw();
     };
-
     $scope.previous = function (pos) {
       var i = getIndex($scope.currentCriterion[pos].index, -1);
       $scope.currentCriterion[pos] = criterion[i];
       $scope.years = getYears();
+      updateDraw();
     };
 
-
-
-    var drawer = CorrelationService.drawChart;
-    var data = CorrelationService.getDataByCriteria("2004",
-      "crime",
-      "GDP",
-      "unemployment");
-    drawer(data);
-    $timeout(function () {
+    var updateDraw2 = function () {
+      var data = CorrelationService.getDataByCriteria("2004",
+        $scope.currentCriterion[0].name, $scope.currentCriterion[0].name, $scope.currentCriterion[0].name);
+      drawer(data);
+    };
+    var updateDraw = function () {
       var data = CorrelationService.getDataByCriteria("2004",
         "crime",
-        "unemployment",
-        "GDP");
+        "GDP",
+        "unemployment");
       drawer(data);
-      $timeout(function () {
-        var data = CorrelationService.getDataByCriteria("2006",
-          "GDP",
-          "unemployment",
-          "crime");
-        drawer(data);
+    };
+    updateDraw2();
 
-        $timeout(function () {
-          var data = CorrelationService.getDataByCriteria("2004",
-            "0 à 19 ans",
-            "20 à 39 ans",
-            "75 ans et plus");
-          drawer(data);
-        }, 3000);
-      }, 3000);
-    }, 3000);
   });
 
 
