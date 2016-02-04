@@ -1,15 +1,64 @@
 * Introduction
-  L'application possède deux fonctionnalités. La première permet de classer les 
-anciennes et les nouvelles régions de la France suivant cinq critères différents: le PIB, l'emploi, 
-l'âge, le crime et le niveau de diplôme. La seconde fonctionnalité permet de visualiser la corrélation
-entre ces différents critères pour toutes les anciennes régions.
-  - Développer application web de visualisation interactive de données
+  Le projet challenge open data est organisé à l'ENSIMAG lors de la
+  troisième année du cycle ingénieur. L'objectif est de créer une
+  application web de visualisation interactive de données Open
+  data. Dans le cadre de ce projet, nous avons choisi de visualiser
+  des indicateurs socio-économiques pour les régions de la France
+  métropolitaine. L'objectif principal est d'observer les similitudes
+  et différences entre les régions en les classifiant selon les
+  critères suivant : le PIB, l'emploi, l'âge, le crime et le niveau de
+  diplôme. Une deuxième fonctionnalité intéressante avec cette
+  classification est de pouvoir comparer des anciennes régions qui ont été
+  fusionnées. Pour appronfondir cette analyse, une corrélation sur
+  trois critères différents a été effectuée sur toutes les anciennes
+  régions. Celle-ci permet d'apprécier plus précisemment les
+  différences qui existent entre des régions qui ont été fusionnées.
 
-* Source des données 
-  Les données ont été récupérées sur le site 
+* Source des données
+  Les données sur le crime, le chômage, le niveau de diplôme et le pib
+  ont été récupérées sur le site de France Découverte
+  http://franceo3.geoclip.fr/ qui proviennent de l'INSEE. Celles sur
+  la répartition de  la population par age ont été récupérées
+  directement sur le site de l'INSEE car elles sont plus récentes.
 
-* Traitement effectués 
-  - 
+* Traitements des données
+  Nous avons récupéré les données disponibles des cinq critères entre
+  1990 et 2015. 
+
+** Classification des régions
+   L'objectif ici est d'offrir à l'utilisateur de l'application la
+   possibilité de classifier les régions en combinant les critères
+   qu'il souhaite pour une année donnée. Pour cela, nous avons
+   pré-traiter les données sous R et stocker les résultats des
+   classifications dans une base de données.
+
+** Traitements  
+**** Classification
+    Pour classifier les régions, selon les critères choisis, nous avons
+    utilisé l'algorithme PAM (Partion Around Medoids). 
+    Un médoïde en statistique est le représentant le plus central d'une
+    classe. L'algorithme consiste à créer k classes en
+    minimisant l'erreur quadratique moyenne qui est la distance entre
+    les points de la classe et le point central (le médoïde). Le
+    nombre de classe k est choisi dynamiquement en fonction de la
+    silhouette qui est un graphe montrant comment chaque observation 
+    appartient plus ou moins à sa classe. Le script qui fait la
+    classification choisi le nombre de classe k qui maximise cette
+    silhouette. 
+
+    Pour réaliser toutes les classifications, nous avons calculé les
+    combinaisons possibles avec les cinq critères au
+    total 31. Ensuite, pour chaque combinaison nous effectuons une 
+    classification par année. 
+    
+    Le résultat est ensuite formaté au format JSON pour ensuite être
+    inséré dans une base de donnée MongoDB. 
+
+**** Corrélation
+     Pour la corrélation, les données brutes sont formatées dans 
+     un schéma JSON précis pour faciliter les traitements de la corrélation
+     directement dans le navigateur.
+
 * Architecture 
 Pour la partie classification, /l'application/ est organisée en deux composants: un /backend/ REST et un /frontend/ utilisant le 
 framework angularjs. 
@@ -17,13 +66,15 @@ Le backend implémente le service de la classification des régions en prenant e
 de classification souhaité. Pour des raisons de performance, le /backend/ utilise une base de donnée mongodb contenant le résultat 
 prétraités des différents clusters pour les différents critères de classification possible.
 Le /frontend/ se charge  d'afficher la carte des nouvelles régions et celle des anciennes.
-Il intercepte les changements de critère puis effectue la requête POST vers l'api REST avant d'afficher les changements sur les différentes
-cartes.
+Il intercepte les changements de critère puis effectue la requête POST
+vers l'api REST avant d'afficher les changements sur 
+les différentes cartes.
 
 Pour la partie correlation, l'application n'est composée que d'un /frontend/ utilisant les technologies angularjs et d3js. 
 Les données correspondant à chaque région sont directement stockées dans un objet JSON pour accélérer la recherche par critère.
-Lorsque l'utilisateur choisit des critères et une année depuis l'interface, l'échelle des deux axes X et Y est dynamiquement mis à jour
-puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la bibliothèque d3js.
+Lorsque l'utilisateur choisit des critères et une année depuis
+l'interface, l'échelle des deux axes X et Y est dynamiquement 
+mis à jour puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la bibliothèque d3js.
 
 
 * Choix des technologies:

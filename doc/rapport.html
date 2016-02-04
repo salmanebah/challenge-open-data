@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2016-02-04 jeu. 21:07 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="viewport" content="width=device-width, initial-scale=1" />
+<title></title>
+<meta  name="generator" content="Org-mode" />
+<meta  name="author" content="Orto" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#orgheadline1">1. Introduction</a></li>
+<li><a href="#orgheadline2">2. Source des données</a></li>
+<li><a href="#orgheadline7">3. Traitements des données</a>
+<ul>
+<li><a href="#orgheadline3">3.1. Classification des régions</a></li>
+<li><a href="#orgheadline6">3.2. Traitements</a></li>
+</ul>
+</li>
+<li><a href="#orgheadline8">4. Architecture</a></li>
+<li><a href="#orgheadline9">5. Choix des technologies:</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgheadline1" class="outline-2">
+<h2 id="orgheadline1"><span class="section-number-2">1</span> Introduction</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Le projet challenge open data est organisé à l'ENSIMAG lors de la
+troisième année du cycle ingénieur. L'objectif est de créer une
+application web de visualisation interactive de données Open
+data. Dans le cadre de ce projet, nous avons choisi de visualiser
+des indicateurs socio-économiques pour les régions de la France
+métropolitaine. L'objectif principal est d'observer les similitudes
+et différences entre les régions en les classifiant selon les
+critères suivant : le PIB, l'emploi, l'âge, le crime et le niveau de
+diplôme. Une deuxième fonctionnalité intéressante avec cette
+classification est de pouvoir comparer des anciennes régions qui ont été
+fusionnées. Pour appronfondir cette analyse, une corrélation sur
+trois critères différents a été effectuée sur toutes les anciennes
+régions. Celle-ci permet d'apprécier plus précisemment les
+différences qui existent entre des régions qui ont été fusionnées.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline2" class="outline-2">
+<h2 id="orgheadline2"><span class="section-number-2">2</span> Source des données</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Les données sur le crime, le chômage, le niveau de diplôme et le pib
+ont été récupérées sur le site de France Découverte
+<a href="http://franceo3.geoclip.fr/">http://franceo3.geoclip.fr/</a> qui proviennent de l'INSEE. Celles sur
+la répartition de  la population par age ont été récupérées
+directement sur le site de l'INSEE car elles sont plus récentes.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline7" class="outline-2">
+<h2 id="orgheadline7"><span class="section-number-2">3</span> Traitements des données</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Nous avons récupéré les données disponibles des cinq critères entre
+1990 et 2015. 
+</p>
+</div>
+
+<div id="outline-container-orgheadline3" class="outline-3">
+<h3 id="orgheadline3"><span class="section-number-3">3.1</span> Classification des régions</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+L'objectif ici est d'offrir à l'utilisateur de l'application la
+possibilité de classifier les régions en combinant les critères
+qu'il souhaite pour une année donnée. Pour cela, nous avons
+pré-traiter les données sous R et stocker les résultats des
+classifications dans une base de données.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgheadline6" class="outline-3">
+<h3 id="orgheadline6"><span class="section-number-3">3.2</span> Traitements</h3>
+<div class="outline-text-3" id="text-3-2">
+</div><ol class="org-ol"><li><a id="orgheadline4"></a>Classification<br  /><div class="outline-text-5" id="text-3-2-0-1">
+<p>
+Pour classifier les régions, selon les critères choisis, nous avons
+utilisé l'algorithme PAM (Partion Around Medoids). 
+Un médoïde en statistique est le représentant le plus central d'une
+classe. L'algorithme consiste à créer k classes en
+minimisant l'erreur quadratique moyenne qui est la distance entre
+les points de la classe et le point central (le médoïde). Le
+nombre de classe k est choisi dynamiquement en fonction de la
+silhouette qui est un graphe montrant comment chaque observation 
+appartient plus ou moins à sa classe. Le script qui fait la
+classification choisi le nombre de classe k qui maximise cette
+silhouette. 
+</p>
+
+<p>
+Pour réaliser toutes les classifications, nous avons calculé les
+combinaisons possibles avec les cinq critères au
+total 31. Ensuite, pour chaque combinaison nous effectuons une 
+classification par année. 
+</p>
+
+<p>
+Le résultat est ensuite formaté au format JSON pour ensuite être
+inséré dans une base de donnée MongoDB. 
+</p>
+</div></li>
+
+<li><a id="orgheadline5"></a>Corrélation<br  /><div class="outline-text-5" id="text-3-2-0-2">
+<p>
+Pour la corrélation, les données brutes sont formatées dans 
+un schéma JSON précis pour faciliter les traitements de la corrélation
+directement dans le navigateur.
+</p>
+</div></li></ol>
+</div>
+</div>
+
+<div id="outline-container-orgheadline8" class="outline-2">
+<h2 id="orgheadline8"><span class="section-number-2">4</span> Architecture</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Pour la partie classification, <i>l'application</i> est organisée en deux composants: un <i>backend</i> REST et un <i>frontend</i> utilisant le 
+framework angularjs. 
+Le backend implémente le service de la classification des régions en prenant en compte des requêtes <b>POST</b> contenant le critère 
+de classification souhaité. Pour des raisons de performance, le <i>backend</i> utilise une base de donnée mongodb contenant le résultat 
+prétraités des différents clusters pour les différents critères de classification possible.
+Le <i>frontend</i> se charge  d'afficher la carte des nouvelles régions et celle des anciennes.
+Il intercepte les changements de critère puis effectue la requête POST
+vers l'api REST avant d'afficher les changements sur 
+les différentes cartes.
+</p>
+
+<p>
+Pour la partie correlation, l'application n'est composée que d'un <i>frontend</i> utilisant les technologies angularjs et d3js. 
+Les données correspondant à chaque région sont directement stockées dans un objet JSON pour accélérer la recherche par critère.
+Lorsque l'utilisateur choisit des critères et une année depuis
+l'interface, l'échelle des deux axes X et Y est dynamiquement 
+mis à jour puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la bibliothèque d3js.
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-orgheadline9" class="outline-2">
+<h2 id="orgheadline9"><span class="section-number-2">5</span> Choix des technologies:</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Plusieurs technologies ont été utilisées pour le projet:
+</p>
+<ul class="org-ul">
+<li>Pour le traitement des données et la classification des régions, le langage de programmation</li>
+</ul>
+<p>
+R est utilisé. Ce choix s'explique par la diversité des traitements proposés par ce langage en particulier 
+pour les algorithmes de machine learning comme la classification non supervisée que nous avons utilisé pour 
+les régions.
+Du côté du Backend pour la classification, le framework play est utilisé pour l'implémentation de l'API REST.
+Ce framework très léger permet d'écrire et de déployer rapidement des applications web en Java. 
+La base de donnée mongodb a été choisie pour le stockage d'une part pour assurer une flexibilité pour le schéma des données 
+mais aussi pour sa représentation des données au format json que nous utilisons pour le traitement et l'affichage des données. 
+Pour le frontend, nous avons utilisé le framework angularjs car il permet de développer rapidement des applications interactives 
+en utilisant le  patron de conception Modèle-Vue-Contrôlleur et des concepts comme l'injection de dépendances et le  
+<i>two way data binding</i>. 
+Pour la visualisation de la partie correlation, la bibliothèque d3js est utilisée. Cette bibliothèque permet 
+de produire des visualisations dynamiques à l'aide des standards svg, html5 et css. 
+Enfin, la bibliothèque Leaflet permet d'afficher les deux cartes pour la classification. 
+Pour l'automatisation des différentes tâches de développement l'outil Grunt est utilisé.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Author: Orto</p>
+<p class="date">Created: 2016-02-04 jeu. 21:07</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
