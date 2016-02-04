@@ -11,11 +11,26 @@ entre ces différents critères pour toutes les anciennes régions.
 * Traitement effectués 
   - 
 * Architecture 
-L'application se compose de deux 
+Pour la partie classification, /l'application/ est organisée en deux composants: un /backend/ REST et un /frontend/ utilisant le 
+framework angularjs. 
+Le backend implémente le service de la classification des régions en prenant en compte des requêtes *POST* contenant le critère 
+de classification souhaité. Pour des raisons de performance, le /backend/ utilise une base de donnée mongodb contenant le résultat 
+prétraités des différents clusters pour les différents critères de classification possible.
+Le /frontend/ se charge  d'afficher la carte des nouvelles régions et celle des anciennes.
+Il intercepte les changements de critère puis effectue la requête POST vers l'api REST avant d'afficher les changements sur les différentes
+cartes.
+
+Pour la partie correlation, l'application n'est composée que d'un /frontend/ utilisant les technologies angularjs et d3js. 
+Les données correspondant à chaque région sont directement stockées dans un objet JSON pour accélérer la recherche par critère.
+
+
 * Choix des technologies
+
 - Backend: 
    - framework play
    - base de donnée mongodb
 - Frontend:
+  - leaflet
   - Angularjs
   - d3js
+   - grunt
