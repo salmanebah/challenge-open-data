@@ -324,7 +324,7 @@ GetAllValidYears <- function(x, mat) {
   for (row in 1:nrow(mat)) {
     criteria.selected.colnames <- c()
     criteria.selected <- list('crime' = 0, 'age' = 0, 'diploma' = 0, 'gdp' = 0, 
-                              ' unemployment' = 0)
+                              'unemployment' = 0)
     
     if (mat[row, 'crime']) {
       criteria.selected[['crime']] <- 1
