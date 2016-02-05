@@ -71,19 +71,20 @@ angular.module('challengeOpenDataApp')
                                             secondCriteria,
                                             thirdCriteria) {
       //TODO: validate input.
-      if (parseInt(year) < 1990 || parseInt(year) > 2015) {
+      if (year === null || parseInt(year) < 1990 || parseInt(year) > 2015) {
         console.log("Year data not available");
         return -1;
       }
       var yearInfo = yearsData[year];
       console.log(yearInfo);
-      if ((yearInfo["criteria"][firstCriteria] === false) ||
-        (yearInfo["criteria"][secondCriteria] === false) ||
-        (yearInfo["criteria"][thirdCriteria] === false)) {
+      if ((yearInfo.criteria[firstCriteria] === false) ||
+        (yearInfo.criteria[secondCriteria] === false) ||
+        (yearInfo.criteria[thirdCriteria] === false)) {
         console.log("Not all criterion is available for the year: " + year);
         console.log(yearInfo);
         return -1;
       }
+
       var firstCriteriaInfo = yearInfo[firstCriteria];
       var secondCriteriaInfo = yearInfo[secondCriteria];
       var thirdCriteriaInfo = yearInfo[thirdCriteria];
@@ -217,6 +218,7 @@ angular.module('challengeOpenDataApp')
           return yScale(d.yCriterion.value);
         })
         .attr("r", 0)
+	    .attr("data-legend", function(d) { return d.region.name;})
         .on("mouseover", function (d) {
           tooltip.transition()
             .duration(200)
@@ -244,6 +246,12 @@ angular.module('challengeOpenDataApp')
         })
         .style("opacity", opacity);
     };
+
+      svg.append("g")
+	  .attr("class","legend")
+	  .attr("transform","translate(50,30)")
+	  .style("font-size","12px")
+	  .call(d3.legend);
     // Called once to setup the context
     initSvg();
     d3Service.drawChart = function (data) {

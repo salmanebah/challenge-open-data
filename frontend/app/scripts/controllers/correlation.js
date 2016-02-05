@@ -76,6 +76,7 @@ angular.module('challengeOpenDataApp')
           return $scope.yearsData[i].years;
         }
       }
+	return [];
     };
 
     var getIndex = function (currentIndex, shift) {
