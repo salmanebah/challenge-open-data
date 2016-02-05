@@ -31,7 +31,12 @@ angular
         controller: 'CorrelationCtrl',
         controllerAs: 'correlation'
       })
+      .when('/home', {
+        templateUrl: 'views/home.html',
+        controller: 'HomeCtrl',
+        controllerAs: 'home'
+      })
       .otherwise({
-        redirectTo: '/classification'
+        redirectTo: '/home'
       });
   });
