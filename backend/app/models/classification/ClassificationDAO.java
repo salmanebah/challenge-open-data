@@ -34,10 +34,11 @@ public class ClassificationDAO {
         Classification classification = query.get();
         return classification;
     }
-    public static Classification findByCriteriaAndYear(Criteria criteria, Integer year) {
+    public static Classification findByCriteriaAndYear(Criteria criteria, Integer year, Integer isNew) {
         Query<Classification> query = ds.createQuery(Classification.class);
         query.field("criteria").equal(criteria);
         query.field("year").equal(year);
+        query.field("newregion").equal(isNew);
         Classification classification = query.get();
         return classification;
     }
