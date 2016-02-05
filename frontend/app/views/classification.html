@@ -1,46 +1,54 @@
 <h1>Visualisation cartographique d'indicateurs socio-économiques</h1>
 <form action="#">
+   'crime': 0,
+      'age': 0,
+      'diploma': 0,
+      'gdp': 0,
+      'unemployment': 0
   <p>
     <input ng-model="criteria.crime" type="checkbox" id="crime"
            ng-true-value="1" ng-false-value="0"/>
     <label for="crime">Crime</label>
 
-    <input ng-model="criteria.education" type="checkbox" id="education"
+    <input ng-model="criteria.age" type="checkbox" id="age"
            ng-true-value="1" ng-false-value="0"/>
-    <label for="education">Éducation</label>
+    <label for="age">Age</label>
 
-    <input ng-model="criteria.employment" type="checkbox" id="employment"
+    <input ng-model="criteria.diploma" type="checkbox" id="diploma"
            ng-true-value="1" ng-false-value="0"/>
-    <label for="employment">Emploi</label>
+    <label for="diploma">Diplôme</label>
 
     <input ng-model="criteria.gdp" type="checkbox" id="gdp"
            ng-true-value="1" ng-false-value="0"/>
     <label for="gdp">PIB</label>
 
-    <input ng-model="criteria.population" type="checkbox" id="population"
+    <input ng-model="criteria.unemployment" type="checkbox" id="unemployment"
            ng-true-value="1" ng-false-value="0"/>
-    <label for="population">Population</label>
+    <label for="unemployment">Chômage</label>
 
-    <input ng-model="year" type="range" min="1990" max="2016" id="year"/>
-    <label for="year">Année : {{year}}</label>
 
+    <select class="" ng-model="year" material-select watch>
+      <option ng-repeat="value in years">{{value}}</option>
+    </select>
   </p>
 </form>
 <button ng-click="updateColors()">Update</button>
 <div class="row">
   <div class="col s6">
-    <leaflet id="myMap" geojson="geojson" center="france" defaults="defaults" maxbounds="maxbounds" width="100%"
+    <leaflet id="myMap" geojson="geojson" legend="legend" center="france" defaults="defaults" maxbounds="maxbounds" width="100%"
              height="700px"></leaflet>
   </div>
   <div class="col s6">
-
-    <leaflet id="myMap2015" geojson="geojson2015" center="france" defaults="defaults" maxbounds="maxbounds" width="100%"
+    <leaflet id="myMap2015" geojson="geojson2015" legend="legend2015" center="france" defaults="defaults" maxbounds="maxbounds" width="100%"
              height="700px"></leaflet>
   </div>
 </div>
 
+<p>{{score}} : {{score2015}}</p>
+<ul>
+  <li ng-repeat="cluster in clusters"> {{cluster.medoid}} : {{cluster.score}}</li>
+</ul>
 
 <ul>
-  <li> region id : {{regionClicked.id}}</li>
-  <li> region name : {{regionClicked.properties.name}}</li>
+  <li ng-repeat="cluster in clusters2015"> {{cluster.medoid}} : : {{cluster.score}}</li>
 </ul>
