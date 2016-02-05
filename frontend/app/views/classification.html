@@ -1,54 +1,87 @@
 <h1>Visualisation cartographique d'indicateurs socio-économiques</h1>
-<form action="#">
-   'crime': 0,
-      'age': 0,
-      'diploma': 0,
-      'gdp': 0,
-      'unemployment': 0
-  <p>
-    <input ng-model="criteria.crime" type="checkbox" id="crime"
-           ng-true-value="1" ng-false-value="0"/>
-    <label for="crime">Crime</label>
+<p>
+  <input ng-model="criteria.crime" type="checkbox" id="crime"
+         ng-true-value="1" ng-false-value="0"/>
+  <label for="crime">Crime</label>
 
-    <input ng-model="criteria.age" type="checkbox" id="age"
-           ng-true-value="1" ng-false-value="0"/>
-    <label for="age">Age</label>
+  <input ng-model="criteria.age" type="checkbox" id="age"
+         ng-true-value="1" ng-false-value="0"/>
+  <label for="age">Age</label>
 
-    <input ng-model="criteria.diploma" type="checkbox" id="diploma"
-           ng-true-value="1" ng-false-value="0"/>
-    <label for="diploma">Diplôme</label>
+  <input ng-model="criteria.diploma" type="checkbox" id="diploma"
+         ng-true-value="1" ng-false-value="0"/>
+  <label for="diploma">Diplôme</label>
 
-    <input ng-model="criteria.gdp" type="checkbox" id="gdp"
-           ng-true-value="1" ng-false-value="0"/>
-    <label for="gdp">PIB</label>
+  <input ng-model="criteria.gdp" type="checkbox" id="gdp"
+         ng-true-value="1" ng-false-value="0"/>
+  <label for="gdp">PIB</label>
 
-    <input ng-model="criteria.unemployment" type="checkbox" id="unemployment"
-           ng-true-value="1" ng-false-value="0"/>
-    <label for="unemployment">Chômage</label>
+  <input ng-model="criteria.unemployment" type="checkbox" id="unemployment"
+         ng-true-value="1" ng-false-value="0"/>
+  <label for="unemployment">Chômage</label>
 
 
-    <select class="" ng-model="year" material-select watch>
-      <option ng-repeat="value in years">{{value}}</option>
-    </select>
-  </p>
-</form>
+  <select class="" ng-model="year" material-select watch>
+    <option ng-repeat="value in years">{{value}}</option>
+  </select>
+</p>
 <button ng-click="updateColors()">Update</button>
 <div class="row">
-  <div class="col s6">
-    <leaflet id="myMap" geojson="geojson" legend="legend" center="france" defaults="defaults" maxbounds="maxbounds" width="100%"
-             height="700px"></leaflet>
+  <div class="col m6">
+    {{score}}
+    <div class="progress">
+      <div class="determinate blue darken-2" ng-style="{width: score * 100 + '%'}"></div>
+    </div>
+    <leaflet id="myMap" geojson="geojson" legend="legend" center="france" defaults="defaults" maxbounds="maxbounds"
+             width="100%" height="700px">
+    </leaflet>
+    <div>
+      <ul class="collection">
+        <div class="col m6 collection-item avatar" ng-repeat="cluster in clusters track by $index">
+          <i ng-style="{backgroundColor:colors[$index]}" class="material-icons circle">fiber manual record</i>
+          {{cluster.medoid.name}}
+          <table>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+            <tr ng-repeat="(key,value) in cluster.medoid">
+              <td>{{key}}</td>
+              <td>{{value}}</td>
+            </tr>
+          </table>
+        </div>
+      </ul>
+    </div>
   </div>
-  <div class="col s6">
-    <leaflet id="myMap2015" geojson="geojson2015" legend="legend2015" center="france" defaults="defaults" maxbounds="maxbounds" width="100%"
-             height="700px"></leaflet>
+
+
+  <div class="col m6">
+    {{score2015}}
+    <div class="progress">
+      <div class="determinate blue darken-2" ng-style="{width: score2015 * 100 + '%'}"></div>
+    </div>
+    <leaflet id="myMap2015" geojson="geojson2015" legend="legend2015" center="france" defaults="defaults"
+             maxbounds="maxbounds" width="100%"
+             height="700px">
+    </leaflet>
+    <div>
+      <ul class="collection">
+        <div class="col m4 collection-item avatar" ng-repeat="cluster in clusters2015">
+          <i ng-style="{backgroundColor:colors[$index]}" class="material-icons circle">fiber manual record</i>
+          {{cluster.medoid.name}}
+          <table>
+            <tr>
+              <th>Key</th>
+              <th>Value</th>
+            </tr>
+            <tr ng-repeat="(key,value) in cluster.medoid">
+              <td>{{key}}</td>
+              <td>{{value}}</td>
+            </tr>
+          </table>
+        </div>
+      </ul>
+    </div>
   </div>
 </div>
-
-<p>{{score}} : {{score2015}}</p>
-<ul>
-  <li ng-repeat="cluster in clusters"> {{cluster.medoid}} : {{cluster.score}}</li>
-</ul>
-
-<ul>
-  <li ng-repeat="cluster in clusters2015"> {{cluster.medoid}} : : {{cluster.score}}</li>
-</ul>

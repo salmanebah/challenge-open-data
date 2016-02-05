@@ -13,7 +13,7 @@
     <div class="row">
 
       <div class="col s6">
-        <div class="card">
+        <div class="card blue white-text">
           <div class="card-image">
             <img src="../images/clustering.png">
             <span class="card-title">Clustering</span>
@@ -26,12 +26,12 @@
             </p>
           </div>
           <div class="card-action">
-            <a href="#/classification">Aller vers la classification</a>
+            <a href="#/classification" class="black-text">Aller vers la classification </a>
           </div>
         </div>
       </div>
       <div class="col s6">
-        <div class="card">
+        <div class="card blue white-text">
           <div class="card-image">
             <img src="../images/clustering.png">
             <span class="card-title">Card Title</span>
@@ -46,7 +46,7 @@
             </p>
           </div>
           <div class="card-action">
-            <a href="#/correlation">Aller vers la correlation</a>
+            <a href="#/correlation" class="black-text">Aller vers la correlation</a>
           </div>
         </div>
       </div>
@@ -56,18 +56,17 @@
     <h1>Source des données</h1>
     <div class="row">
       <div class="col">
-        <div class="card grey darken-1">
+        <div class="card blue darken-1">
           <div class="card-content white-text">
             <span class="card-title">Franceo3</span>
             <p>Les données sur le crime, le chômage, le niveau de diplôme et le pib
-              ont été récupérées sur le site de France Découverte
-              <a href="http://franceo3.geoclip.fr/">http://franceo3.geoclip.fr/</a> qui proviennent de l'INSEE. Celles
+              ont été récupérées sur le site de France Découverte qui proviennent de l'INSEE. Celles
               sur
               la répartition de la population par age ont été récupérées
               directement sur le site de l'INSEE car elles sont plus récentes.</p>
           </div>
           <div class="card-action">
-            <a href="http://franceo3.geoclip.fr/">Franceo3</a>
+            <a href="http://franceo3.geoclip.fr/" class="black-text">Franceo3</a>
 
           </div>
         </div>
@@ -81,157 +80,148 @@
     Nous avons récupéré les données disponibles des cinq critères entre
     1990 et 2015.
   </p>
-  <ul class="collapsible" data-collapsible="accordion">
-    <li>
-      <h2 class="collapsible-header">Classification</h2>
-      <div class="collapsible-body">
-        <p>
-          L'objectif ici est d'offrir à l'utilisateur de l'application la
-          possibilité de classifier les régions en combinant les critères
-          qu'il souhaite pour une année donnée. Pour cela, nous avons
-          pré-traiter les données sous R et stocker les résultats des
-          classifications dans une base de données.
-          <br>
-          Pour classifier les régions, selon les critères choisis, nous avons
-          utilisé l'algorithme PAM (Partion Around Medoids).
-          Un médoïde en statistique est le représentant le plus central d'une
-          classe. L'algorithme consiste à créer k classes en
-          minimisant l'erreur quadratique moyenne qui est la distance entre
-          les points de la classe et le point central (le médoïde). Le
-          nombre de classe k est choisi dynamiquement en fonction de la
-          silhouette qui est un graphe montrant comment chaque observation
-          appartient plus ou moins à sa classe. Le script qui fait la
-          classification choisi le nombre de classe k qui maximise cette
-          silhouette.
-          <br>
-          Pour réaliser toutes les classifications, nous avons calculé les
-          combinaisons possibles avec les cinq critères au
-          total 31. Ensuite, pour chaque combinaison nous effectuons une
-          classification par année.
-          <br>
-          Le résultat est ensuite formaté au format JSON pour ensuite être
-          inséré dans une base de donnée MongoDB.
-        </p>
-      </div>
-    </li>
-    <li>
-      <h2 class="collapsible-header">Corrélation</h2>
-      <div class="collapsible-body">
-        <p>
-          Pour la corrélation, les données brutes sont formatées dans
-          un schéma JSON précis pour faciliter les traitements de la corrélation
-          directement dans le navigateur.
-        </p>
-      </div>
-    </li>
-  </ul>
+  <h2>Classification</h2>
+  <p>
+    L'objectif ici est d'offrir à l'utilisateur de l'application la
+    possibilité de classifier les régions en combinant les critères
+    qu'il souhaite pour une année donnée. Pour cela, nous avons
+    pré-traiter les données sous R et stocker les résultats des
+    classifications dans une base de données.
+    <br>
+    Pour classifier les régions, selon les critères choisis, nous avons
+    utilisé l'algorithme PAM (Partion Around Medoids).
+    Un médoïde en statistique est le représentant le plus central d'une
+    classe. L'algorithme consiste à créer k classes en
+    minimisant l'erreur quadratique moyenne qui est la distance entre
+    les points de la classe et le point central (le médoïde). Le
+    nombre de classe k est choisi dynamiquement en fonction de la
+    silhouette qui est un graphe montrant comment chaque observation
+    appartient plus ou moins à sa classe. Le script qui fait la
+    classification choisi le nombre de classe k qui maximise cette
+    silhouette.
+    <br>
+    Pour réaliser toutes les classifications, nous avons calculé les
+    combinaisons possibles avec les cinq critères au
+    total 31. Ensuite, pour chaque combinaison nous effectuons une
+    classification par année.
+    <br>
+    Le résultat est ensuite formaté au format JSON pour ensuite être
+    inséré dans une base de donnée MongoDB.
+  </p>
+  <h2>Corrélation</h2>
+  <p>
+    Pour la corrélation, les données brutes sont formatées dans
+    un schéma JSON précis pour faciliter les traitements de la corrélation
+    directement dans le navigateur.
+  </p>
+</div>
 
 
-  <div>
+<div>
 
-    <h1>Architecture</h1>
-    <p>
-      Pour la partie classification, l'application est organisée en deux composants: un backend REST et un frontend
-      utilisant le
-      framework angularjs.
-      Le backend implémente le service de la classification des régions en prenant en compte des requêtes <b>POST</b>
-      contenant le critère
-      de classification souhaité. Pour des raisons de performance, le backend utilise une base de donnée mongodb
-      contenant le résultat
-      prétraités des différents clusters pour les différents critères de classification possible.
-      Le frontend se charge d'afficher la carte des nouvelles régions et celle des anciennes.
-      Il intercepte les changements de critère puis effectue la requête POST
-      vers l'api REST avant d'afficher les changements sur
-      les différentes cartes.
-    </p>
+  <h1>Architecture</h1>
+  <p>
+    Pour la partie classification, l'application est organisée en deux composants: un backend REST et un frontend
+    utilisant le
+    framework angularjs.
+    Le backend implémente le service de la classification des régions en prenant en compte des requêtes <b>POST</b>
+    contenant le critère
+    de classification souhaité. Pour des raisons de performance, le backend utilise une base de donnée mongodb
+    contenant le résultat
+    prétraités des différents clusters pour les différents critères de classification possible.
+    Le frontend se charge d'afficher la carte des nouvelles régions et celle des anciennes.
+    Il intercepte les changements de critère puis effectue la requête POST
+    vers l'api REST avant d'afficher les changements sur
+    les différentes cartes.
+  </p>
 
-    <p>
-      Pour la partie correlation, l'application n'est composée que d'un frontend utilisant les technologies angularjs
-      et d3js.
-      Les données correspondant à chaque région sont directement stockées dans un objet JSON pour accélérer la
-      recherche par critère.
-      Lorsque l'utilisateur choisit des critères et une année depuis l'interface, l'échelle des deux axes X et Y est
-      dynamiquement
-      mis à jour puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la
-      bibliothèque d3.
-    </p>
-    <div class="center">
-      <img src="../images/architecture.svg">
-    </div>
+  <p>
+    Pour la partie correlation, l'application n'est composée que d'un frontend utilisant les technologies angularjs
+    et d3js.
+    Les données correspondant à chaque région sont directement stockées dans un objet JSON pour accélérer la
+    recherche par critère.
+    Lorsque l'utilisateur choisit des critères et une année depuis l'interface, l'échelle des deux axes X et Y est
+    dynamiquement
+    mis à jour puis les différentes régions sont translatées vers les nouvelles positions à l'aide de la
+    bibliothèque d3.
+  </p>
+  <div class="center">
+    <img src="../images/architecture.svg">
   </div>
-  <div>
-    <h1>Choix des technologies</h1>
-    <div class="row">
-      <div class="col s6 m3">
-        <div class="card blue-grey darken-1">
-          <div class="card-content white-text">
-            <span class="card-title">R</span>
-            <p>Pour le traitement des données et la classification des régions, le langage de programmation
-              R est utilisé. Ce choix s'explique par la diversité des traitements proposés par ce langage en particulier
-              pour les algorithmes de machine learning comme la classification non supervisée que nous avons utilisé
-              pour
-              les régions.</p>
-          </div>
-          <div class="card-action">
-            <a href="#">R</a>
-          </div>
+</div>
+<div>
+  <h1>Choix des technologies</h1>
+  <div class="row">
+    <div class="col s6 m3">
+      <div class="card blue darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">R</span>
+          <p>Pour le traitement des données et la classification des régions, le langage de programmation
+            R est utilisé. Ce choix s'explique par la diversité des traitements proposés par ce langage en particulier
+            pour les algorithmes de machine learning comme la classification non supervisée que nous avons utilisé
+            pour
+            les régions.</p>
+        </div>
+        <div class="card-action">
+          <a href="#">R</a>
         </div>
       </div>
+    </div>
 
-      <div class="col s6 m3">
-        <div class="card blue-grey darken-1">
-          <div class="card-content white-text">
-            <span class="card-title">Play Framework</span>
-            <p>Du côté Backend pour la classification, le framework play est utilisé pour l'implémentation de l'API
-              REST.
-              Ce framework très léger permet d'écrire et de déployer rapidement des applications web en Java.
-              La base de donnée mongodb a été choisie pour le stockage d'une part pour assurer une flexibilité pour le
-              schéma
-              des données
-              mais aussi pour sa représentation des données au format JSON que nous utilisons pour le traitement et
-              l'affichage des données..</p>
-          </div>
-          <div class="card-action">
-            <a href="#">Play Framework</a>
-          </div>
+    <div class="col s6 m3">
+      <div class="card blue darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">Play Framework</span>
+          <p>Du côté Backend pour la classification, le framework play est utilisé pour l'implémentation de l'API
+            REST.
+            Ce framework très léger permet d'écrire et de déployer rapidement des applications web en Java.
+            La base de donnée mongodb a été choisie pour le stockage d'une part pour assurer une flexibilité pour le
+            schéma
+            des données
+            mais aussi pour sa représentation des données au format JSON que nous utilisons pour le traitement et
+            l'affichage des données..</p>
+        </div>
+        <div class="card-action">
+          <a href="#">Play Framework</a>
         </div>
       </div>
+    </div>
 
-      <div class="col s6 m3">
-        <div class="card blue-grey darken-1">
-          <div class="card-content white-text">
-            <span class="card-title">AngularJS</span>
-            <p>Pour le frontend, nous avons utilisé le framework Angularjs car il permet de développer rapidement des
-              applications intéractives
-              en utilisant le patron de conception Modèle-Vue-Contrôlleur, l'injection de dépendances et le
-              <i>two way data binding</i> qui permet de mettre à jour automatiquement le modèle ou la vue lorsque l'un
-              d'entre
-              eux est modifié.
-            </p>
-          </div>
-          <div class="card-action">
-            <a href="#">AngularJS</a>
-          </div>
+    <div class="col s6 m3">
+      <div class="card blue darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">AngularJS</span>
+          <p>Pour le frontend, nous avons utilisé le framework Angularjs car il permet de développer rapidement des
+            applications intéractives
+            en utilisant le patron de conception Modèle-Vue-Contrôlleur, l'injection de dépendances et le
+            <i>two way data binding</i> qui permet de mettre à jour automatiquement le modèle ou la vue lorsque l'un
+            d'entre
+            eux est modifié.
+          </p>
+        </div>
+        <div class="card-action">
+          <a href="#">AngularJS</a>
         </div>
       </div>
+    </div>
 
-      <div class="col s6 m3">
-        <div class="card blue-grey darken-1">
-          <div class="card-content white-text">
-            <span class="card-title">D3.js et Leaflet.js</span>
-            <p>Pour la visualisation de la partie correlation, la bibliothèque d3js est utilisée. Cette bibliothèque
-              permet
-              de produire des visualisations dynamiques à l'aide des standards svg, html5 et css.
-              Enfin, la bibliothèque Leaflet permet d'afficher les deux cartes pour la classification.
-            </p>
-          </div>
-          <div class="card-action">
-            <a href="#">D3</a> <a href="#">Leaflet</a>
+    <div class="col s6 m3">
+      <div class="card blue darken-1">
+        <div class="card-content white-text">
+          <span class="card-title">D3.js et Leaflet.js</span>
+          <p>Pour la visualisation de la partie correlation, la bibliothèque d3js est utilisée. Cette bibliothèque
+            permet
+            de produire des visualisations dynamiques à l'aide des standards svg, html5 et css.
+            Enfin, la bibliothèque Leaflet permet d'afficher les deux cartes pour la classification.
+          </p>
+        </div>
+        <div class="card-action">
+          <a href="#">D3</a> <a href="#">Leaflet</a>
 
-          </div>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 </body>
