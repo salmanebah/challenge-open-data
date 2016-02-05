@@ -1,6 +1,6 @@
 
-ClassifyRegionsAllCombination <- function(crime, unemployment, gdp, diploma, age, is.new.regions = 1, 
-                                          path = '../mongoDB-init/', filename = 'classification', 
+ClassifyRegionsAllCombination <- function(crime, unemployment, gdp, diploma, age, is.new.regions = 1, cluster.min = 2,
+                                          cluster.max = 10, path = '../mongoDB-init/', filename = 'classification', 
                                           raw.data.filename = 'raw-data-by-year.json', valid.years.filename = "valid-years.json") {
   # Clusters regions with all combination of the given criteria
   # Args:
@@ -9,6 +9,8 @@ ClassifyRegionsAllCombination <- function(crime, unemployment, gdp, diploma, age
   #   gdp                   : Regions gdp
   #   diploma               : Regions diploma rate
   #   is.new.regions        : 1 means the individual are new 2016 regions
+  #   cluster.min           : Minimum number of cluster to create
+  #   cluster.max           : Maximum number of cluster to create
   #   path                  : The path where the result will be stored
   #   filename              : The clustering result filename
   #   raw.data.filename     : The data stored year  by year for all regions and all criteria
@@ -71,7 +73,7 @@ ClassifyRegionsAllCombination <- function(crime, unemployment, gdp, diploma, age
     }
     criteria$filename <- paste(criteria$filename, "json", sep = ".")
     regions.cluster[[as.character(row)]] <- ClassifyRegions(regions, criteria, years = seq(1990, 2015), 
-                                                            cluster.min = 2, cluster.max = 10)
+                                                            cluster.min = cluster.min, cluster.max = cluster.max, region.new = is.new.regions)
     clustering.result.json <- paste(clustering.result.json, regions.cluster[[as.character(row)]]$result.json, sep = "\n")
   }  
   
