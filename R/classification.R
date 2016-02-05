@@ -51,7 +51,7 @@ ClassifyRegionsAllCombination(crime, unemployment, gdp, diploma, age, is.new.reg
 
 # Computes the classification for old regions
 ClassifyRegionsAllCombination(old.regions.crime, old.regions.unemployment, old.regions.gdp, 
-                              old.regions.diploma, old.regions.age, is.new.regions = 0, 
+                              old.regions.diploma, old.regions.age, is.new.regions = 0, cluster.min = 3,
                               path = '../mongoDB-init/', filename = 'classification-old-regions.json', 
                               raw.data.filename = "raw-data-old-regions-by-year.json", 
                               valid.years.filename = "valid-years-old-regions.json")
