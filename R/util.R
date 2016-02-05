@@ -271,7 +271,6 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
     
   }
   regions$result.json <- result.json
-  write(regions$result.json, file = paste(path, filename, sep = ""))
   return(regions)
 }
 
@@ -419,7 +418,12 @@ GetAllValidYears <- function(x, mat) {
 }
 
 GetValidYears <- function(x.use, criteria.selected) {
-  # Get all valid
+  # Gets all valid for selected criteria
+  # Args:
+  #   x.use : Two dimensional matrix containing only the selected criteria as column
+  #   criteria.selected: A list of criteria with a logical value
+  # Returns:
+  #   A list with the criteria selected and the years where all of these criteria contain data. 
   x.use <- as.matrix(x.use)
   row.no.na <- which(rowSums(is.na(x.use)) == 0, arr.ind = TRUE)
   row.no.na.years <- rownames(as.matrix(row.no.na))
