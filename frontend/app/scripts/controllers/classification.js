@@ -89,16 +89,8 @@ angular.module('challengeOpenDataApp')
         years: getYears(criteria),
         score: 0,
         score2015: 0,
-        legend: {
-          position: 'bottomleft',
-          colors: ['#ff0000', '#28c9ff', '#0000ff', '#ecf386'],
-          labels: ['National Cycle Route', 'Regional Cycle Route', 'Local Cycle Network', 'Cycleway']
-        },
-        legend2015: {
-          position: 'bottomleft',
-          colors: ['#ff0000', '#28c9ff', '#0000ff', '#ecf386'],
-          labels: ['National Cycle Route', 'Regional Cycle Route', 'Local Cycle Network', 'Cycleway']
-        }
+        legend: {},
+        legend2015: {}
       });
 
       $scope.layer = L.geoJson();
@@ -149,10 +141,9 @@ angular.module('challengeOpenDataApp')
         $http.post('/api/classification/' + $scope.year, $scope.criteria)
           .success(function (data) {
             $scope.clusters = data.newClassification.clusters;
-            $scope.score = data.newClassification.score;
+            $scope.score = parseFloat(data.newClassification.score).toFixed(2);
             $scope.clusters2015 = data.oldClassification.clusters;
-            $scope.score2015 = data.oldClassification.score;
-
+            $scope.score2015 = parseFloat(data.oldClassification.score).toFixed(2);
             $scope.geojson.style = function (feature) {
               return $scope.getStyle(feature, $scope.clusters);
             };
