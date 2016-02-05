@@ -102,3 +102,15 @@ body {
 .progress{
   background-color: skyblue;
 }
+
+.btn-text{
+  display : inline-block;
+  font-size: 10px;
+  width: 4em;
+  margin-right : 10%;
+  margin-left : 10%;
+
+}
+.rect{
+  display: inline-block;
+}

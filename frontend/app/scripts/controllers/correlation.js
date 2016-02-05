@@ -21,7 +21,25 @@ angular.module('challengeOpenDataApp')
       {name: "60 à 74 ans", index: 7},
       {name: "75 ans et plus", index: 8}
     ];
-
+    var colorArray = ["#1f77b4", "#e7ba52", "#2ca02c", "#8c564b",
+      "#bcbd22", "#8c6d31", "#990099", "#993333",
+      "#99cc00", "#cc3300", "#0099ff", "#ff9900",
+      "#00ff99"];
+    $scope.colorMap = {
+      "Ile de France" : colorArray[0],
+      24: colorArray[1],
+      26: colorArray[2], 43: colorArray[2],
+      23: colorArray[3], 25: colorArray[3],
+      31: colorArray[4], 22: colorArray[4],
+      41: colorArray[5], 42: colorArray[5], 21: colorArray[5],
+      52: colorArray[6],
+      53: colorArray[7],
+      72: colorArray[8], 54: colorArray[8], 74: colorArray[8],
+      73: colorArray[9], 91: colorArray[9],
+      82: colorArray[10], 83: colorArray[10],
+      93: colorArray[11],
+      94: colorArray[12]
+    };
     $scope.year = "2004";
     $scope.years = [2004];
     var drawer = CorrelationService.drawChart;
@@ -76,6 +94,7 @@ angular.module('challengeOpenDataApp')
           return $scope.yearsData[i].years;
         }
       }
+	return [];
     };
 
     var getIndex = function (currentIndex, shift) {

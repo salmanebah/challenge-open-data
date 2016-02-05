@@ -71,19 +71,20 @@ angular.module('challengeOpenDataApp')
                                             secondCriteria,
                                             thirdCriteria) {
       //TODO: validate input.
-      if (parseInt(year) < 1990 || parseInt(year) > 2015) {
+      if (year === null || parseInt(year) < 1990 || parseInt(year) > 2015) {
         console.log("Year data not available");
         return -1;
       }
       var yearInfo = yearsData[year];
       console.log(yearInfo);
-      if ((yearInfo["criteria"][firstCriteria] === false) ||
-        (yearInfo["criteria"][secondCriteria] === false) ||
-        (yearInfo["criteria"][thirdCriteria] === false)) {
+      if ((yearInfo.criteria[firstCriteria] === false) ||
+        (yearInfo.criteria[secondCriteria] === false) ||
+        (yearInfo.criteria[thirdCriteria] === false)) {
         console.log("Not all criterion is available for the year: " + year);
         console.log(yearInfo);
         return -1;
       }
+
       var firstCriteriaInfo = yearInfo[firstCriteria];
       var secondCriteriaInfo = yearInfo[secondCriteria];
       var thirdCriteriaInfo = yearInfo[thirdCriteria];
@@ -99,13 +100,13 @@ angular.module('challengeOpenDataApp')
     var initSvg = function () {
       svg = d3.select("#bubble-chart").append("svg")
         .attr("height", height + margin.left + margin.right)
-        .attr("width", width + margin.top + margin.bottom);
+        .attr("width", width + margin.top + margin.bottom + 900);
 
       tooltip = d3.select("body").append("div")
         .attr("class", "tooltip")
         .style("opacity", 0);
       chart = svg.append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        .attr("transform", "translate(" + 250 + "," + 100 + ")");
     };
 
     var updateScale = function (data) {
@@ -217,11 +218,18 @@ angular.module('challengeOpenDataApp')
           return yScale(d.yCriterion.value);
         })
         .attr("r", 0)
+        .attr("data-legend", function (d) {
+          return d.region.name;
+        })
+        .attr("data-legend-color", function (d) {
+          var id = d.region.id;
+          return colorMap[id];
+        })
         .on("mouseover", function (d) {
           tooltip.transition()
             .duration(200)
             .style("opacity", 0.9);
-          tooltip.html("Région:" + d.region.name + "<br/>" +
+          tooltip.html("Region:" + d.region.name + "<br/>" +
               d.xCriterion.name + ": " + d.xCriterion.value + "<br/>" +
               d.yCriterion.name + ": " + d.yCriterion.value + "<br/>" +
               d.sizeCriterion.name + ": " + d.sizeCriterion.value + "<br/>")
@@ -244,12 +252,18 @@ angular.module('challengeOpenDataApp')
         })
         .style("opacity", opacity);
     };
+
     // Called once to setup the context
     initSvg();
     d3Service.drawChart = function (data) {
       updateScale(data);
       updateAxis(data);
       drawRegions(data);
+      svg.append("g")
+        .attr("class", "legend")
+        .attr("transform", "translate(50,230)")
+        .style("font-size", "12px")
+        .call(d3.legend);
     };
 
     return d3Service;

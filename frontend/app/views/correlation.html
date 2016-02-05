@@ -1,27 +1,29 @@
-<div class="container">
-  <div id="bubble-chart"></div>
-  <div>
-    <section>
-      <button ng-click="previous(0)"> Précedent</button>
-      <label>{{currentCriterion[0].name}}</label>
-      <button ng-click="next(0)"> Suivant</button>
-    </section>
-    <section>
-      <button ng-click="previous(1)"> Précedent</button>
-      <label>{{currentCriterion[1].name}}</label>
-      <button ng-click="next(1)">Suivant</button>
-    </section>
-    <section>
-      <button ng-click="previous(2)"> Précedent</button>
-      <label>{{currentCriterion[2].name}}</label>
-      <button ng-click="next(2)">Suivant</button>
-    </section>
+<div class="row">
+  <div class="col s9">
+    <div id="bubble-chart"></div>
+    <div id="legend"></div>
+    <div>
+      <section>
+        <span class="btn" ng-click="previous(0)"> <i class="material-icons">fast_rewind</i></span>
+        <div class="btn-text center-diign">{{currentCriterion[0].name}}</div>
+        <span class="btn" ng-click="next(0)"><i class="material-icons">fast_forward</i></span>
+      </section>
+      <section>
+        <span class="btn" ng-click="previous(1)"> <i class="material-icons">fast_rewind</i></span>
+        <div class="btn-text center-align">{{currentCriterion[1].name}}</div>
+        <span class="btn" ng-click="next(1)"><i class="material-icons">fast_forward</i></span>
+      </section>
+      <section>
+        <span class="btn" ng-click="previous(2)"> <i class="material-icons">fast_rewind</i></span>
+        <div class="btn-text center-align">{{currentCriterion[2].name}}</div>
+        <span class="btn" ng-click="next(2)"><i class="material-icons">fast_forward</i></span>
+      </section>
+      <select class="small" ng-model="year" ng-style="{bodySize : 10 + '%'}" material-select watch>
+        <option ng-repeat="value in years">{{value}}</option>
+      </select>
+    </div>
   </div>
-  <div>
-    {{years}}
+  <div class="col s3" >
+
   </div>
-  {{year}} {{amadou}}
-    <select  ng-model="year" material-select watch>
-      <option ng-repeat="value in years">{{value}}</option>
-    </select>
 </div>
