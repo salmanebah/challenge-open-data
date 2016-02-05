@@ -1,16 +1,13 @@
 package controllers;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import models.classification.Classification;
 import models.classification.ClassificationDAO;
 import models.classification.CoupledClassification;
 import models.classification.Criteria;
 import play.libs.Json;
-import play.mvc.*;
-
-import views.html.*;
-
-import java.util.Map;
+import play.mvc.Controller;
+import play.mvc.Result;
+import views.html.index;
 
 public class Application extends Controller {
 
