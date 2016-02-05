@@ -219,11 +219,15 @@ angular.module('challengeOpenDataApp')
         })
         .attr("r", 0)
 	    .attr("data-legend", function(d) { return d.region.name;})
+	    .attr("data-legend-color", function (d) {
+		var id = d.region.id;
+		return colorMap[id];
+            })
         .on("mouseover", function (d) {
           tooltip.transition()
             .duration(200)
             .style("opacity", 0.9);
-          tooltip.html("Région:" + d.region.name + "<br/>" +
+          tooltip.html("Region:" + d.region.name + "<br/>" +
               d.xCriterion.name + ": " + d.xCriterion.value + "<br/>" +
               d.yCriterion.name + ": " + d.yCriterion.value + "<br/>" +
               d.sizeCriterion.name + ": " + d.sizeCriterion.value + "<br/>")
@@ -246,18 +250,18 @@ angular.module('challengeOpenDataApp')
         })
         .style("opacity", opacity);
     };
-
-      svg.append("g")
-	  .attr("class","legend")
-	  .attr("transform","translate(50,30)")
-	  .style("font-size","12px")
-	  .call(d3.legend);
+      
     // Called once to setup the context
     initSvg();
     d3Service.drawChart = function (data) {
       updateScale(data);
       updateAxis(data);
-      drawRegions(data);
+	drawRegions(data);
+	svg.append("g")
+	    .attr("class","legend")
+	    .attr("transform","translate(50,30)")
+	    .style("font-size","12px")
+	    .call(d3.legend);
     };
 
     return d3Service;
