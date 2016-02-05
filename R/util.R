@@ -2,7 +2,7 @@ RemoveComma <- function(x, from = 3) {
   # Removes comma from a character numeric matrix and return the corresponding numeric 
   # values as vector 
   # Args:
-  #   x   : A two dimension matrix containing characters number with commas
+  #   x   : A two dimensional matrix containing characters number with commas
   #   from: The index of column to start 
   # Returns:
   #   A numeric vector corresponding to the values contained in the x matrix    
@@ -33,7 +33,7 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
   #   use.x       : TRUE means the x variable was used for the clustering. 
   #   path        : The directory where the file will be stored. 
   #   filename    : The JSON filename
-  #   region.new  : 1 if the clustering is made in the 2016 regions
+  #   region.new  : 1 if the clustering is made with the 2016 regions
   # Returns: 
   #   The clustering result in JSON.
   
@@ -46,14 +46,14 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
   }
  
   regions$hash <- hash(keys=regions$code, values=regions$names)  # Hashes the region codes with its names
-  regions$invertedGroups <- invert(hash(regions[[year]]$groups)) # inverts the hash map
+  regions$invertedGroups <- invert(hash(regions[[year]]$groups)) # inverts the hash map to the cluster ids
   
   # Builds the JSON schema
   clusters <- c()
   list.regions <- list()
- 
+  
   # Gets the ids of the medoids from the computed clustering
-  medoid.ids <- keys(hash(regions[[year]]$groups))
+  medoid.ids <- regions[[year]]$medoid.ids
   assert('Got the medoids ids', !is.null(medoid.ids))
   
   # Creates the 'clustering' JSON object
@@ -94,11 +94,16 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
       }      
     }
     
+    is.medoid.in.cluster <- FALSE
     # Aggregates the region ids and their names in a array for each cluster
     for (codeRegion in regions$invertedGroups[[cluster.id]]) {
       cluster.id.regions[[length(cluster.id.regions) + 1]] <- list('id' = as.numeric(codeRegion),
                                                         'name' = regions$hash[[codeRegion]])
+      if (codeRegion == medoid.id) {
+        is.medoid.in.cluster <- TRUE
+      }
     }
+    assert("Medoid is present in its cluster", is.medoid.in.cluster == TRUE)
     list.regions[[length(list.regions) + 1]] <- list('medoid' = medoid, 'regions' = c(cluster.id.regions))
   }
   
@@ -112,14 +117,24 @@ ClassificationToJSON <- function(regions, use.crime = TRUE, use.age = TRUE, use.
                           'score' = regions[[year]]$score, 'clusters' = c(clusters))
   
   # Converts to JSON
-  regions$result.json <- toJSON(cluster.result, pretty = pretty, auto_unbox = TRUE)
+  regions$result.json <- toJSON(clusters.result, pretty = pretty, auto_unbox = TRUE)
   return(regions$result.json)
 }
 
-# Clustering
 ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.min = 3, 
                             cluster.max = 10, filename = "classification.json",
-                            path = "../mongoDB-init/", region.new = TRUE) {
+                            path = "../mongoDB-init/", region.new = 1) {
+  # Clusters the regions using PAM (Partition Around Medoids) algorithm.
+  # Args:
+  #   regions     : Vector containing the region data for all criteria 
+  #   criteria    : List of criteria with the corresponding data for each criterion. 
+  #   years       : Years sequence includes all the criteria's ones. 
+  #   cluster.min : Minimum number of cluster to create. 
+  #   path        : The directory where the file will be stored. 
+  #   region.new  : 1 if the clustering is made with the 2016 regions
+  # Returns: 
+  #   The clustering result in JSON.
+  
   # Checks the required libraries are loaded. 
   for (package in c('fpc', 'testit')) {
     if (!require(package, character.only=T, quietly=T)) {
@@ -128,6 +143,7 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
     }
   }
   
+  # Initializes the criteria
   criteria$nbCriteria <- 0
   crime <- NULL
   age   <- NULL
@@ -136,7 +152,9 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
   unemployment <- NULL
   variableNames <- c()
   
-  #Sorts regions according to their code
+  # Get the selected criteria, fill the name of criteria selected 
+  # and compute the number of criteria selected. The last variable is used to 
+  # compute the years where all the selected criteria contain data. 
   if (!is.null(criteria$crime)) {
     variableNames <- c("crime")
     crime <- criteria$crime
@@ -173,8 +191,8 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
   regions$data <- array(dim = c(length(years), length(regions$names), length(variableNames)),
                         dimnames = list(years, regions$code, variableNames))
 
-    # Fills the matrix by year.
-  year.valid <- c()
+  # Fills the matrix by year.
+  year.valid <- c() # An array containing all years where the selected criteria contain data. 
   for (year in as.character(years)) {
     nbValidCriteria <- 0  # Number of criterion containing data for the this 'year'. 
     if (!is.null(age[[year]])) {
@@ -205,26 +223,23 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
       regions$data[year, , 'diploma'] <- diploma[[year]]
       inc(nbValidCriteria)
     }
+    # Checks if all the criteria have data for this year
     if (nbValidCriteria == criteria$nbCriteria) {
       year.valid <- c(year.valid, year)
     }
   }
   
-  # Hierarchical Clustering based on similarity of permutation distributions
-#   regions$pdclust <- pdclust(regions$data, clustering.method = "average")
-#   plot(regions$pdclust, hang = -0.01, cex = 0.7, xlab = paste("Classification selon le ", 
-#                                                               variableNames, collapse = ", "), 
-#        timeseries.as.labels = FALSE, labels = regions$names)
-#   
-  # Estimates the best number of clusters according to the silhouette criterion
-  #pamk.best <- pamk(regions$pdclust$D, krange = cluster.min:cluster.max) 
   
-  result.json <- ''
+  result.json <- '' # variable that contain the clustering result in JSON.
+  
+  # Compute the clusters for all years for the given criteria. 
   for (year in as.character(year.valid)) {
-    print(paste('year' , year))
-    pamk.best <- pamk(regions$data[year, ,], krange = cluster.min:cluster.max)
+    
+    # Computes the best k when data are scaled or not. 
+    pamk.best <- pamk(regions$data[year, ,], krange = cluster.min:cluster.max) 
     pamk.scaled.best <- pamk(regions$data[year, ,], krange = cluster.min:cluster.max, 
                              scaling = TRUE)
+    # Gets the best number of clusters that maximize the pam's silhouette. 
     if (pamk.best$pamobject$silinfo$avg.width <  pamk.scaled.best$pamobject$silinfo$avg.width) {
       regions[[year]]$nbclust <- pamk.scaled.best$nc
       regions[[year]]$pam <- pamk.scaled.best$pamobject
@@ -232,23 +247,19 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
       regions[[year]]$nbclust <- pamk.best$nc
       regions[[year]]$pam <- pamk.best$pamobject
     } 
-#     print(pamk.best$pamobject$silinfo$avg.width)
-#     print(pamk.scaled.best$pamobject$silinfo$avg.width)
-#     print(regions[[year]]$nbclust)
-    # Clusters
+
+    regions[[year]]$groups <- regions[[year]]$pam$clustering # Gets the clustering result
+ 
+    # Summarizes the clustering by getting the medoid of all clusters, and the average silhouette
+    # coefficient. 
+    regions[[year]]$medoid.ids <- rownames(regions[[year]]$pam$medoids) # Gets the medoid ids
+    assert("There is at least one medoid", !is.null(regions[[year]]$medoid.ids))
     
-    regions[[year]]$groups <- regions[[year]]$pam$clustering
-    # Draws dendogram with red borders around the nbclust clusters
-    #rect.hclust(regions$pdclust, k=regions$nbclust, border="red") 
-    # Summarizes clusters 
-    regions[[year]]$id.medoids <- regions[[year]]$pam$id.med
-    assert("There is at least one medoid", !is.null(regions[[year]]$id.medoids))
-    
-    regions[[year]]$score <- regions[[year]]$pam$silinfo$avg.width
+    regions[[year]]$score <- regions[[year]]$pam$silinfo$avg.width # Get the average silhouette coefficient
     assert("The is a score for the current clustering", !is.null(regions[[year]]$score))
     
     # Writes the result in JSON
-    tmp <- ClassificationToJSON(regions,
+    year.result.json <- ClassificationToJSON(regions,
                                    filename    =  filename, 
                                    use.crime   = ifelse(is.null(crime), FALSE, TRUE), 
                                    use.age     = ifelse(is.null(age), FALSE, TRUE), 
@@ -256,16 +267,23 @@ ClassifyRegions <- function(regions, criteria, years = seq(1990, 2015), cluster.
                                    use.gdp     = ifelse(is.null(gdp), FALSE, TRUE),
                                    use.unemployment = ifelse(is.null(unemployment), FALSE, TRUE), 
                                    year = year, region.new = region.new)
-    result.json <- paste(result.json, tmp, sep = "\n")
+    result.json <- paste(result.json, year.result.json, sep = "\n")
     
   }
   regions$result.json <- result.json
-  write(regions$result.json, file = paste(path, filename, sep = ""))
   return(regions)
 }
 
-# Format a cell value
+
 GetValue <- function(x, line, colname, hash) {
+  # Format a cell value
+  # Args: 
+  #   x       : Two dimensional matrix 
+  #   line    : The line containing the cell to format
+  #   colname : The colname containing the cell to format
+  #   hash    : A Map of region code and its name
+  # Returns:
+  #   A list with the region code, its name the its value for the given column's name
   region.id <- as.numeric(rownames(x)[line])
   region.name <- hash[[as.character(region.id)]]
   
@@ -274,8 +292,15 @@ GetValue <- function(x, line, colname, hash) {
               'value' = as.numeric(x[line, colname])))
 }
 
-# Format a values from a column
+
 GetValues <- function (x, colname, hash) {
+  # Format all the cell value of a column
+  # Args:
+  #   x       : A two dimensional matrix
+  #   colname : The colname to format
+  #   hash    : A hash containing the region code and its name
+  # Returns: 
+  #   A liste containing all the cell formated for the given colname. 
   res <- vector('list')
   values <- c()
   for (line in 1:nrow(x)) {
@@ -286,6 +311,12 @@ GetValues <- function (x, colname, hash) {
 }
 
 GetDataFromAllColumns <- function(x, hash) {
+  # Format all cell of a matrix by column
+  # Args:
+  #   x     : Two dimensional matrix
+  #   hash  : A map containg region codes and its names
+  # Returns:
+  #   A list of all matrix values formated by column
   result <- vector('list')
   for (colname in colnames(x)) {
     result <- c(result, GetValues(x, colname, hash))
@@ -294,12 +325,21 @@ GetDataFromAllColumns <- function(x, hash) {
 } 
 
 FormatDataByYear <- function(x, years, hash) {
+  # Format all the raw data into a list ready to be converted in JSON. 
+  # Args:
+  #   x     : Three dimensional matrix with year in dim(1)
+  #   years : Sequence of years to in which the data containg in the matrix x 
+  #           will be formated. 
+  #   hahs  : A hash map with region codes and its names. 
+  #   Returns: 
+  #     An array of list containing the years as key and an array of formated cell
+  #     as value. This list can be converted to JSON to match the JSON years schema. 
   result <- c()
   criteria <- vector('list') # Contains a list of the critera
   for (year in as.character(years)) {
     x.year    <- x[year, ,]
-    x.use     <- x.year[, colSums(is.na(x.year)) != nrow(x.year)]
-    x.not.use <- x.year[, colSums(is.na(x.year)) > 0]
+    x.use     <- x.year[, colSums(is.na(x.year)) != nrow(x.year)] # Removes all row that contain NA values
+    x.not.use <- x.year[, colSums(is.na(x.year)) > 0] # Gets the 
     
     # Build the criteria list with the criteria name as key and a boolean as value
     criteria <- ColNameToList(x.use)
@@ -317,8 +357,12 @@ FormatDataByYear <- function(x, years, hash) {
 
 
 ColNameToList <- function(x, value = TRUE) {
-  
-  # Create a list with colname of x as keys and the given value as value
+  # Creates a list with colnames(x) as keys and the given value as value
+  # Args:
+  #   x     : Two dimensional matrix
+  #   value : The value to assign to all list's keys.
+  # Returns:
+  #   A list with column names of matrix x as keys and their value to the given value. 
   result <- vector('list')
   for(colname in colnames(x)) {
     result[[colname]] <- value
@@ -327,6 +371,12 @@ ColNameToList <- function(x, value = TRUE) {
 } 
 
 GetAllValidYears <- function(x, mat) {
+  # Creates a list with colnames(x) as keys and the given value as value
+  # Args:
+  #   x     : Two dimensional matrix
+  #   value : The value to assign to all list's keys.
+  # Returns:
+  #   A list with column names of matrix x as keys and their value to the given value. 
   result <- c()
   
   for (row in 1:nrow(mat)) {
@@ -368,6 +418,12 @@ GetAllValidYears <- function(x, mat) {
 }
 
 GetValidYears <- function(x.use, criteria.selected) {
+  # Gets all valid for selected criteria
+  # Args:
+  #   x.use : Two dimensional matrix containing only the selected criteria as column
+  #   criteria.selected: A list of criteria with a logical value
+  # Returns:
+  #   A list with the criteria selected and the years where all of these criteria contain data. 
   x.use <- as.matrix(x.use)
   row.no.na <- which(rowSums(is.na(x.use)) == 0, arr.ind = TRUE)
   row.no.na.years <- rownames(as.matrix(row.no.na))
