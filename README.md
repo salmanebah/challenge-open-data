@@ -9,9 +9,9 @@ vagrant up
 ```
 Will install the required packages.
 - Connect to the vagrant box with:
-  ```sh
-  vagrant ssh
-  ```
+```sh
+vagrant ssh
+```
 
 - Import the data in mongodb:
 ```sh
