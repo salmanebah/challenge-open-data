@@ -179,7 +179,7 @@ angular.module('challengeOpenDataApp')
     };
     $scope.$watch('criteria', function () {
       console.log('criteria has changed');
-      $scope.years = getYears(criteria)
+	$scope.years = getYears(criteria);
     }, true);
     $scope.$watch('year', function () {
       console.log('year has changed');
