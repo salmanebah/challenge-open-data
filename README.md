@@ -3,18 +3,16 @@ Visualization of the new regions of France by using clustering and correlation
 based on socio-economics indicators.
 
 # Running using vagrant
-1. From the project root directory:
-
+- From the project root directory:
 ```sh
 vagrant up
 ```
-
 Will install the required packages.
-2. Starting the app:
-Connect to the vagrant box with:
-```sh
-vagrant ssh
-```
+- Connect to the vagrant box with:
+  ```sh
+  vagrant ssh
+  ```
+
 - Import the data in mongodb:
 ```sh
 cd /vagrant/mongoDB-init/
@@ -35,4 +33,4 @@ npm install
 bower install
 grunt serve
 ```
-3. Open `chrome` and head to `localhost:9000`
+- Open `chrome` and head to `localhost:9000`
